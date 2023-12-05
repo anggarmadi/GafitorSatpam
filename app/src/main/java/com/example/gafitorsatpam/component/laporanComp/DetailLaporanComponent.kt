@@ -63,6 +63,7 @@ fun DetailLaporan() {
             TextField(
                 value = "F 1 KRI",
                 label = { Text(text = "Nomor Polisi") },
+                enabled = false,
                 onValueChange = {},
                 modifier = Modifier
                     .padding(bottom = 16.dp)
@@ -71,6 +72,7 @@ fun DetailLaporan() {
             TextField(
                 value = "Honda Vario 1000 CC",
                 label = { Text(text = "Merek Kendaraan") },
+                enabled = false,
                 onValueChange = {},
                 modifier = Modifier
                     .padding(bottom = 16.dp)
@@ -79,6 +81,7 @@ fun DetailLaporan() {
             TextField(
                 value = "Maroon Metalic",
                 label = { Text(text = "Warna Kendaraan") },
+                enabled = false,
                 onValueChange = {},
                 modifier = Modifier
                     .padding(bottom = 16.dp)
@@ -87,6 +90,7 @@ fun DetailLaporan() {
             TextField(
                 value = "19/10/2023, 04:43 PM",
                 label = { Text(text = "Tanggal Laporan") },
+                enabled = false,
                 onValueChange = {},
                 modifier = Modifier
                     .padding(bottom = 16.dp)
@@ -95,7 +99,8 @@ fun DetailLaporan() {
             )
             TextField(
                 value = "Laporan Kunci Tertinggal",
-                label = { Text(text = "Jenis Laporan") },
+                label = { Text(text = "Deskripsi Laporan") },
+                enabled = false,
                 onValueChange = {},
                 modifier = Modifier
                     .padding(bottom = 16.dp)

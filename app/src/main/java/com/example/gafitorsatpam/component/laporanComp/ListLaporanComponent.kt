@@ -50,7 +50,7 @@ fun ListLaporanView(
     val mContext = LocalContext.current
     LazyColumn(modifier = Modifier.padding(vertical = 4.dp)){
         items(items = daftar) { name ->
-            CardLaporanView(name = name)
+            CardLaporanView(name = name, platNumber = "CR 7 SIU")
 
         }
     }
@@ -65,7 +65,7 @@ fun ListLaporanPreview() {
 }
 
 @Composable
-fun CardLaporanView(name: String = "Lorem",modifier: Modifier = Modifier) {
+fun CardLaporanView(name: String = "Lorem", platNumber: String = "BA 4444 ON",modifier: Modifier = Modifier) {
     val expanded = rememberSaveable { mutableStateOf(false) }
     val extraPadding by animateDpAsState(
         if (expanded.value) 4.dp else 0.dp,
@@ -108,7 +108,7 @@ fun CardLaporanView(name: String = "Lorem",modifier: Modifier = Modifier) {
                     .padding(bottom = extraPadding.coerceAtLeast(0.dp))
             ) {
                 Text(
-                    text = "BA 7777 SIU",
+                    text = platNumber,
                     modifier = modifier,
                     color = Color.White,
                     fontWeight = FontWeight.Bold

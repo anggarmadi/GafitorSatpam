@@ -2,6 +2,7 @@
 
 package com.example.gafitorsatpam.component.parkirComp
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,11 +24,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gafitorsatpam.R
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormParkir() {
     var licensePlateNumber by remember { mutableStateOf("") }
@@ -39,6 +43,12 @@ fun FormParkir() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column {
+            Image(
+                painter = painterResource(id = R.drawable.logo_png) ,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
             Text(
                 text = "Nomor Polisi",
                 fontSize = 20.sp,
@@ -101,15 +111,15 @@ fun FormParkir() {
         ) {
             Text(text = "Kirim")
         }
-        Button(
-            onClick = { /*TODO*/ },
-            modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 8.dp)
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
-        ) {
-            Text(text = "Scan QR")
-        }
+//        Button(
+//            onClick = { /*TODO*/ },
+//            modifier = Modifier
+//                .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 8.dp)
+//                .fillMaxWidth(),
+//            shape = RoundedCornerShape(8.dp),
+//        ) {
+//            Text(text = "Scan QR")
+//        }
     }
 }
 

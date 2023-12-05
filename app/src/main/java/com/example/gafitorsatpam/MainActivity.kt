@@ -18,16 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.gafitorsatpam.component.BottomBar
-import com.example.gafitorsatpam.component.TopBarAtas
 import com.example.gafitorsatpam.component.TopBarMenu
-import com.example.gafitorsatpam.component.TopListParkir
-import com.example.gafitorsatpam.component.laporanComp.FormLaporan
-import com.example.gafitorsatpam.component.laporanComp.LaporComponentPreview
-import com.example.gafitorsatpam.component.laporanComp.ListLaporanView
 import com.example.gafitorsatpam.component.parkirComp.CardUserParkir
-import com.example.gafitorsatpam.component.parkirComp.FormParkir
-import com.example.gafitorsatpam.component.parkirComp.ListUserParkir
-import com.example.gafitorsatpam.ui.fe.LaporanScreen
+import com.example.gafitorsatpam.ui.fe.LaporanSatpam.LaporanScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
 class MainActivity : ComponentActivity() {

@@ -28,11 +28,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormLaporan() {
     var licensePlateNumber by remember { mutableStateOf("") }
     var firstLetter by remember { mutableStateOf("") }
     var secondLetter by remember { mutableStateOf("") }
+    var desk by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier,
@@ -132,6 +134,15 @@ fun FormLaporan() {
                     TextField(
                         value = "19/10/2023, 04:43 PM",
                         label = { Text(text = "Tanggal Laporan") },
+                        onValueChange = {},
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .fillMaxWidth()
+
+                    )
+                    TextField(
+                        value = "Kunci Motor Tertinggal",
+                        label = { Text(text = "Deskripsi Laporan") },
                         onValueChange = {},
                         modifier = Modifier
                             .padding(bottom = 16.dp)

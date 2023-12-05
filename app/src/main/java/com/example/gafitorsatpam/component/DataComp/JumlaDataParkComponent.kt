@@ -3,7 +3,9 @@ package com.example.gafitorsatpam.component.DataComp
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -56,8 +58,14 @@ fun ReportData(countKendaraan: Int, modifier: Modifier = Modifier){
                     text = "Kendaraan",
                     fontSize = 16.sp
                 )
-                Spacer(modifier = Modifier.padding(32.dp))
-                Button(onClick = { /*TODO*/ }) {
+                Spacer(modifier = Modifier.padding(16.dp))
+                Button(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 8.dp),
+//                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                ) {
                     Text(text = "Detail")
                 }
             }
