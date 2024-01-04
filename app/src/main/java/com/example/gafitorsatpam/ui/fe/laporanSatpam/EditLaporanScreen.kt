@@ -1,4 +1,4 @@
-package com.example.gafitorsatpam.ui.fe.LaporanSatpam
+package com.example.gafitorsatpam.ui.fe.laporanSatpam
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.gafitorsatpam.component.laporanComp.FormLaporan
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

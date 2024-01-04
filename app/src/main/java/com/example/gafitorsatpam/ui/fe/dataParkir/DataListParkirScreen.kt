@@ -1,4 +1,4 @@
-package com.example.gafitorsatpam.ui.fe.DataParkir
+package com.example.gafitorsatpam.ui.fe.dataParkir
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

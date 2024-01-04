@@ -1,5 +1,6 @@
-package com.example.gafitorsatpam.ui.fe.parkir
+package com.example.gafitorsatpam.ui.fe.laporanSatpam
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -9,23 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import com.example.gafitorsatpam.GafitoViewModel
-import com.example.gafitorsatpam.component.BottomBar
 import com.example.gafitorsatpam.component.TopBarAtas
-import com.example.gafitorsatpam.component.parkirComp.FormParkir
-import com.example.gafitorsatpam.model.BottomBarItem
+import com.example.gafitorsatpam.component.laporanComp.DetailLaporan
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
+fun DetailLapScreen() {
     Scaffold(
-        topBar = { TopBarAtas(screen = "Input Parkir") },
-        bottomBar = { BottomBar(
-            selectedItem = BottomBarItem.LAPORPARKIR,
-            navController = navController
-        )}
+        topBar = {TopBarAtas("Detail Laporan")}
     ) {
             paddingValues ->
         Column(
@@ -36,7 +30,7 @@ fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
 
         ) {
 //        your code compose here
-            FormParkir()
+            DetailLaporan()
 
         }
     }
@@ -44,7 +38,8 @@ fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
 
 @Preview(showBackground = true)
 @Composable
-fun ParkirPreview() {
+fun DetailLaporanPrev() {
     GafitorSatpamTheme {
+        DetailLapScreen()
     }
 }
