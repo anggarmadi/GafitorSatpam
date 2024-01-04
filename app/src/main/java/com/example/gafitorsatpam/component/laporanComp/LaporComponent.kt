@@ -2,16 +2,27 @@
 
 package com.example.gafitorsatpam.component.laporanComp
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,22 +34,71 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import com.example.gafitorsatpam.GafitoViewModel
+import com.example.gafitorsatpam.R
+import com.example.gafitorsatpam.main.CommonProgressSpinner
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
 @Composable
-fun FormLaporan() {
+fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: String) {
     var licensePlateNumber by remember { mutableStateOf("") }
     var firstLetter by remember { mutableStateOf("") }
     var secondLetter by remember { mutableStateOf("") }
+    var merek by remember { mutableStateOf("")}
+    var warna by remember { mutableStateOf("")}
+
+    val nomorPolisi = "$firstLetter $licensePlateNumber $secondLetter"
+    var imageUri by remember { mutableStateOf(encodedUri) }
+
+    val newLaporanImageLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            imageUri = uri.toString()
+        }
+
+    val cameraImageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { uri ->
+        imageUri = uri.toString()
+    }
+
+    val focusManager = LocalFocusManager.current
 
     Column(
-        modifier = Modifier,
+        modifier = Modifier.verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Card {
+                if (imageUri.isEmpty()) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_image_placeholder),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clickable { newLaporanImageLauncher.launch("image/*") },
+                        contentScale = ContentScale.Crop,
+                    )
+                } else {
+                    Image(
+                        painter = rememberAsyncImagePainter(imageUri),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(120.dp)
+                            .fillMaxSize()
+                            .clickable { newLaporanImageLauncher.launch("image/*") },
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
             Text(
                 text = "Nomor Polisi",
                 fontSize = 20.sp,
@@ -114,35 +174,30 @@ fun FormLaporan() {
 
                 ) {
                     TextField(
-                        value = "Honda Vario 1000 CC",
+                        value = merek,
                         label = { Text(text = "Merek Kendaraan") },
-                        onValueChange = {},
+                        onValueChange = {merek = it},
                         modifier = Modifier
                             .padding(bottom = 16.dp)
                             .fillMaxWidth()
                     )
                     TextField(
-                        value = "Maroon Metalic",
+                        value = warna,
                         label = { Text(text = "Warna Kendaraan") },
-                        onValueChange = {},
+                        onValueChange = {warna = it},
                         modifier = Modifier
                             .padding(bottom = 16.dp)
                             .fillMaxWidth()
-                    )
-                    TextField(
-                        value = "19/10/2023, 04:43 PM",
-                        label = { Text(text = "Tanggal Laporan") },
-                        onValueChange = {},
-                        modifier = Modifier
-                            .padding(bottom = 16.dp)
-                            .fillMaxWidth()
-
                     )
                 }
             }
         }
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                focusManager.clearFocus()
+                //call the VM
+                vm.onNewLaporan(Uri.parse(imageUri), nomorPolisi, merek, warna) { navController.popBackStack() }
+            },
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
@@ -150,13 +205,12 @@ fun FormLaporan() {
         ) {
             Text(text = "Kirim")
         }
+        
+        Spacer(modifier = Modifier.padding(64.dp))
     }
+
+    val inProgress = vm.inProgress.value
+    if (inProgress)
+        CommonProgressSpinner()
 }
 
-@Preview (showBackground = true)
-@Composable
-fun LaporComponentPreview() {
-    GafitorSatpamTheme {
-        FormLaporan()
-    }
-}
