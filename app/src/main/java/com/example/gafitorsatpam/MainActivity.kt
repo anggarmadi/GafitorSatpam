@@ -10,14 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.gafitorsatpam.main.NotificationMessage
-import com.example.gafitorsatpam.ui.fe.DetailLapScreen
 import com.example.gafitorsatpam.auth.LoginScreen
-import com.example.gafitorsatpam.ui.fe.LaporKehilanganScreen
+import com.example.gafitorsatpam.ui.fe.LaporanSatpam.LaporKehilanganScreen
+import com.example.gafitorsatpam.ui.fe.LaporanSatpam.DetailLapScreen
 import com.example.gafitorsatpam.ui.fe.ParkirDataScreen
 import com.example.gafitorsatpam.ui.fe.parkir.LaporParkirScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
