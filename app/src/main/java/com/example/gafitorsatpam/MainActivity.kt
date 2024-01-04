@@ -3,26 +3,27 @@ package com.example.gafitorsatpam
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.gafitorsatpam.component.BottomBar
-import com.example.gafitorsatpam.component.TopBarMenu
-import com.example.gafitorsatpam.component.parkirComp.CardUserParkir
-import com.example.gafitorsatpam.ui.fe.LaporanSatpam.LaporanScreen
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.gafitorsatpam.main.NotificationMessage
+import com.example.gafitorsatpam.ui.fe.DetailLapScreen
+import com.example.gafitorsatpam.auth.LoginScreen
+import com.example.gafitorsatpam.ui.fe.LaporKehilanganScreen
+import com.example.gafitorsatpam.ui.fe.ParkirDataScreen
+import com.example.gafitorsatpam.ui.fe.parkir.LaporParkirScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,60 +34,57 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LaporanScreen()
+                    GafitoApp()
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GafitorSatpamTheme {
-        Greeting("Android")
+sealed class DestinationScreen(val route: String) {
+    object Login: DestinationScreen( "login")
+    object DetailLaporan: DestinationScreen("detail_laporan")
+    object ParkirData: DestinationScreen("parkir_data")
+    object LaporParkir: DestinationScreen("lapor_parkir")
+    object LaporKehilangan: DestinationScreen("lapor_kehilangan/{imageUri}") {
+        fun createRoute(uri: String) = "lapor_kehilangan/$uri"
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun GafitoSApp(modifier: Modifier = Modifier) {
-    Scaffold(
-        topBar = { TopBarMenu(screen = "Home") },
-        bottomBar = { BottomBar(posisi = 0) }) { paddingValues ->
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
-                .verticalScroll(rememberScrollState())
-                .padding(paddingValues)
+fun GafitoApp() {
+    val vm = hiltViewModel<GafitoViewModel>()
+    val navController = rememberNavController()
 
-        ) {
-//        your code compose here
-            CardUserParkir()
-            CardUserParkir()
-            CardUserParkir()
-            CardUserParkir()
-            CardUserParkir()
-            CardUserParkir()
-            CardUserParkir()
+    NotificationMessage(vm = vm)
 
+    NavHost(navController = navController, startDestination = DestinationScreen.Login.route) {
+        composable(DestinationScreen.Login.route) {
+            LoginScreen(navController = navController, vm = vm)
+        }
+        composable(DestinationScreen.DetailLaporan.route) {
+            DetailLapScreen()
+        }
+        composable(DestinationScreen.ParkirData.route) {
+            ParkirDataScreen(navController = navController, vm = vm)
+        }
+        composable(DestinationScreen.LaporKehilangan.route) {
+            LaporParkirScreen(navController = navController, vm =vm)
+        }
+        composable(DestinationScreen.LaporKehilangan.route) { navBackStackEntry ->
+            val imageUri = navBackStackEntry.arguments?.getString("imageUri")
+            imageUri?.let {
+                LaporKehilanganScreen(navController = navController, vm = vm, encodedUri = it)
+            }
         }
     }
-
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GafitoSAppPreview() {
     GafitorSatpamTheme {
-        GafitoSApp()
     }
 }
