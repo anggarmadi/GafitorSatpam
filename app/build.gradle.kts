@@ -98,4 +98,9 @@ dependencies {
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC")
 
+    // bar code
+    implementation("com.google.android.gms:play-services-code-scanner:16.0.0-beta3")
+
+    implementation ("androidx.compose.runtime:runtime-livedata:1.2.0")
+
 }

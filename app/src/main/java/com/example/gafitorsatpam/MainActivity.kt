@@ -20,6 +20,7 @@ import com.example.gafitorsatpam.ui.fe.laporanSatpam.DetailLapScreen
 import com.example.gafitorsatpam.ui.fe.ParkirDataScreen
 import com.example.gafitorsatpam.ui.fe.parkir.LaporParkirScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
+import com.example.simpleqrscanner.ViewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -69,7 +70,7 @@ fun GafitoApp() {
         composable(DestinationScreen.ParkirData.route) {
             ParkirDataScreen(navController = navController, vm = vm)
         }
-        composable(DestinationScreen.LaporKehilangan.route) {
+        composable(DestinationScreen.LaporParkir.route) {
             LaporParkirScreen(navController = navController, vm =vm)
         }
         composable(DestinationScreen.LaporKehilangan.route) { navBackStackEntry ->

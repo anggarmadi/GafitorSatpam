@@ -4,6 +4,7 @@ package com.example.gafitorsatpam.component.parkirComp
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,10 +32,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gafitorsatpam.R
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
+import com.example.simpleqrscanner.ViewModel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormParkir() {
+fun FormParkir(
+    barcodeValue: String?
+) {
     var licensePlateNumber by remember { mutableStateOf("") }
     var firstLetter by remember { mutableStateOf("") }
     var secondLetter by remember { mutableStateOf("") }
@@ -109,16 +114,16 @@ fun FormParkir() {
                 .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
         ) {
-            Text(text = "Kirim")
+            Text(text = "$barcodeValue")
         }
 //        Button(
-//            onClick = { /*TODO*/ },
+//            onClick = {  },
 //            modifier = Modifier
 //                .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 8.dp)
 //                .fillMaxWidth(),
 //            shape = RoundedCornerShape(8.dp),
 //        ) {
-//            Text(text = "Scan QR")
+//            Text(text = "$barcodeValue")
 //        }
     }
 }
@@ -127,6 +132,6 @@ fun FormParkir() {
 @Composable
 fun FormParkirPreview() {
     GafitorSatpamTheme {
-        FormParkir()
+//        FormParkir()
     }
 }
