@@ -7,6 +7,7 @@ plugins {
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -58,7 +59,7 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.9.0")
-    implementation ("androidx.navigation:navigation-compose:2.4.0-alpha01")
+    implementation ("androidx.navigation:navigation-compose:2.4.0-alpha08")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.0")
@@ -104,5 +105,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-code-scanner:16.0.0-beta3")
 
     implementation ("androidx.compose.runtime:runtime-livedata:1.2.0")
+
+
 
 }
