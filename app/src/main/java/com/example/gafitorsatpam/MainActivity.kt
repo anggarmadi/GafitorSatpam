@@ -15,9 +15,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.gafitorsatpam.main.NotificationMessage
 import com.example.gafitorsatpam.auth.LoginScreen
+import com.example.gafitorsatpam.data.LaporanData
 import com.example.gafitorsatpam.ui.fe.laporanSatpam.LaporKehilanganScreen
-import com.example.gafitorsatpam.ui.fe.laporanSatpam.DetailLapScreen
-import com.example.gafitorsatpam.ui.fe.ParkirDataScreen
+import com.example.gafitorsatpam.ui.fe.dataParkir.ParkirDataScreen
+import com.example.gafitorsatpam.ui.fe.laporanSatpam.DetailLaporanScreen
+import com.example.gafitorsatpam.ui.fe.laporanSatpam.ListLaporanScreen
 import com.example.gafitorsatpam.ui.fe.parkir.LaporParkirScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 import com.example.simpleqrscanner.ViewModel.MainViewModel
@@ -50,6 +52,7 @@ sealed class DestinationScreen(val route: String) {
     object LaporKehilangan: DestinationScreen("lapor_kehilangan/{imageUri}") {
         fun createRoute(uri: String) = "lapor_kehilangan/$uri"
     }
+    object ListLaporan: DestinationScreen("listlaporan")
 }
 
 
@@ -65,7 +68,7 @@ fun GafitoApp() {
             LoginScreen(navController = navController, vm = vm)
         }
         composable(DestinationScreen.DetailLaporan.route) {
-            DetailLapScreen()
+            DetailLaporanScreen(navController = navController, vm = vm, laporan = LaporanData())
         }
         composable(DestinationScreen.ParkirData.route) {
             ParkirDataScreen(navController = navController, vm = vm)
@@ -78,6 +81,9 @@ fun GafitoApp() {
             imageUri?.let {
                 LaporKehilanganScreen(navController = navController, vm = vm, encodedUri = it)
             }
+        }
+        composable(DestinationScreen.ListLaporan.route) {
+            ListLaporanScreen(navController = navController, vm = vm)
         }
     }
 }

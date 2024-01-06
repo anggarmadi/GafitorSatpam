@@ -70,7 +70,7 @@ fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
 
         ) {
 //        your code compose here
-            FormParkir(barcodeResult.value)
+            FormParkir(navController, vm)
 
         }
     }

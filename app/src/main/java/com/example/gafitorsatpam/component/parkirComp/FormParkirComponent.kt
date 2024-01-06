@@ -2,6 +2,7 @@
 
 package com.example.gafitorsatpam.component.parkirComp
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.scrollable
@@ -12,7 +13,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -26,10 +29,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.gafitorsatpam.GafitoViewModel
 import com.example.gafitorsatpam.R
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 import com.example.simpleqrscanner.ViewModel.MainViewModel
@@ -37,14 +43,22 @@ import com.example.simpleqrscanner.ViewModel.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormParkir(
-    barcodeValue: String?
+    navController: NavController,
+    vm: GafitoViewModel
 ) {
     var licensePlateNumber by remember { mutableStateOf("") }
     var firstLetter by remember { mutableStateOf("") }
     var secondLetter by remember { mutableStateOf("") }
 
+    val noPolisi = "$firstLetter $licensePlateNumber $secondLetter"
+
+    val focusManager = LocalFocusManager.current
+
     Column(
-        modifier = Modifier,
+        modifier = Modifier
+            .verticalScroll(
+                rememberScrollState()
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column {
@@ -108,13 +122,13 @@ fun FormParkir(
             }
         }
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { vm.onCreateParkir(noPolisi) },
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 4.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
         ) {
-            Text(text = "$barcodeValue")
+            Text(text = "")
         }
 //        Button(
 //            onClick = {  },

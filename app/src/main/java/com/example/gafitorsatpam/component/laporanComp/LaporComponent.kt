@@ -49,6 +49,7 @@ import com.example.gafitorsatpam.R
 import com.example.gafitorsatpam.main.CommonProgressSpinner
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: String) {
     var licensePlateNumber by remember { mutableStateOf("") }
