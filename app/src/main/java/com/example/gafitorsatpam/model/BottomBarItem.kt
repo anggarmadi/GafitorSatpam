@@ -7,6 +7,6 @@ import com.example.gafitorsatpam.R
 
 enum class BottomBarItem(val icon: Int, val navDestination: DestinationScreen, val text: String) {
     PARKIRDATA(R.drawable.data_parkir, DestinationScreen.ParkirData, "Data Parkir"),
-    LAPORPARKIR(R.drawable.scan_qr, DestinationScreen.LaporKehilangan, "Scan QR"),
+    LAPORPARKIR(R.drawable.scan_qr, DestinationScreen.LaporParkir, "Scan QR"),
     REPORT(R.drawable.report, DestinationScreen.ListLaporan, "Report"),
 }

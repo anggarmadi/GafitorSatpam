@@ -1,5 +1,7 @@
 package com.example.gafitorsatpam.component.laporanComp
 
+import android.os.Bundle
+import android.os.Parcel
 import android.util.Log
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -95,6 +97,7 @@ fun CardLaporanView(
     modifier: Modifier = Modifier,
     onLaporanClick: (LaporanData) -> Unit
 ) {
+
     val laporanImageDisplay = laporan?.laporanImage ?: ""
     val nomorPolisiDisplay = laporan?.nomorPolisi ?: ""
     val merekDisplay = laporan?.merek ?: ""
@@ -161,7 +164,7 @@ fun CardLaporanView(
                     Spacer(modifier = Modifier.padding(top = 16.dp))
                     Button(
                         onClick = { laporan?.let { laporan -> onLaporanClick(laporan)
-                            Log.d("laporan", "laporan $laporan")} },
+                            Log.d("laporan", "laporan nya adalah $laporan")}},
                         colors = ButtonDefaults.buttonColors(Warning),
                         modifier = Modifier
                             .padding(start = 8.dp, end = 8.dp)

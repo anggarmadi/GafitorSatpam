@@ -3,6 +3,7 @@
 package com.example.gafitorsatpam
 
 import android.os.Bundle
+import android.os.Parcel
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -88,9 +89,17 @@ fun GafitoApp() {
             ListLaporanScreen(navController = navController, vm = vm)
         }
         composable(DestinationScreen.DetailLaporan.route) {
-            val laporanData = navController.previousBackStackEntry?.arguments?.getParcelable<LaporanData>("laporan")
-
+//            val laporanData = navController.currentBackStackEntry?.arguments?.getParcelable<LaporanData>("laporan")
+            val laporanData = navController.previousBackStackEntry?.savedStateHandle?.get<LaporanData>("laporan")
+            Log.d("laporan", "Argumen navigasi: ${navController.currentBackStackEntry?.arguments}")
+            // Periksa apakah laporan adalah null
+            if (laporanData == null) {
+                // Tampilkan pesan kesalahan
+                Log.e("laporan", "laporan tidak ditemukan nih, kosong")
+            }
+            val test = navController.currentBackStackEntry
             Log.d("laporanData", "laporanData to $laporanData")
+            Log.d("Tst", "ada ga $test")
 
             laporanData?.let {
                 DetailLaporanScreen(
@@ -103,6 +112,7 @@ fun GafitoApp() {
             }
             // Print for debugging
             println("laporanData: $laporanData")
+            println("laporanData: $test")
         }
 //        composable("detail_laporan/{laporanId}") { backStackEntry ->
 //            val laporanId = backStackEntry.arguments?.getString("laporanId")
