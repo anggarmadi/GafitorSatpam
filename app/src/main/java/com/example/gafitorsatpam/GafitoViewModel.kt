@@ -7,6 +7,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.ViewModel
 import com.example.gafitorsatpam.data.Event
 import com.example.gafitorsatpam.data.LaporanData
+import com.example.gafitorsatpam.data.ParkirData
 import com.example.gafitorsatpam.data.UserData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,6 +21,7 @@ import javax.inject.Inject
 
 const val USERS = "users"
 const val LAPORAN = "laporan"
+const val PARKIR = "parkir"
 
 @HiltViewModel
 class GafitoViewModel @Inject constructor(
@@ -297,5 +299,44 @@ class GafitoViewModel @Inject constructor(
         val sortedLaporans = newLaporans.sortedByDescending { it.time }
         outState.value = sortedLaporans
     }
+
+    fun onCreateParkir(nomorPolisi: String, onParkirSuccess: () -> Unit) {
+        inProgress.value = true
+
+        val userRef = db.collection(USERS).document(nomorPolisi)
+        userRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val userId = document.data?.get("userId") as String
+                val merek = document.data?.get("merek") as String
+                val name = document.data?.get("name") as String
+                val imageUrl = document.data?.get("imageUrl") as String
+
+                val parkirUUID = UUID.randomUUID().toString()
+
+                val parkir = ParkirData(
+                    parkirId = parkirUUID,
+                    nomorPolisi = nomorPolisi,
+                    userId = userId,
+                    merek = merek,
+                    name = name,
+                    imageUrl = imageUrl,
+                    time = System.currentTimeMillis()
+                )
+
+                db.collection(PARKIR).document(parkirUUID).set(parkir)
+                    .addOnSuccessListener {
+                        popupNotification.value = Event("Data Parkir berhasil ditambahkan")
+                        inProgress.value = false
+                        refreshLaporan()
+                        onParkirSuccess.invoke()
+                    }
+                    .addOnFailureListener { exc ->
+                        handleException(exc, "Gagal menambahkan data Parkir")
+                        inProgress.value = false
+                    }
+
+                }
+            }
+        }
 
 }
