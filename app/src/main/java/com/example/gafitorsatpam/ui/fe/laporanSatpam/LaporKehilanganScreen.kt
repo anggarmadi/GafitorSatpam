@@ -23,9 +23,9 @@ import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 fun LaporKehilanganScreen(navController: NavController, vm: GafitoViewModel, encodedUri: String) {
     Scaffold(
         topBar = { TopBarMenu(screen = "Lapor Kehilangan") },
-        bottomBar = {BottomBar(
-            selectedItem = BottomBarItem.REPORT,
-            navController = navController)}
+//        bottomBar = {BottomBar(
+//            selectedItem = BottomBarItem.REPORT,
+//            navController = navController)}
     ) {
         Column(
             modifier = Modifier
@@ -40,5 +40,6 @@ fun LaporKehilanganScreen(navController: NavController, vm: GafitoViewModel, enc
 @Composable
 fun LaporHilangPreview() {
     GafitorSatpamTheme {
+
     }
 }

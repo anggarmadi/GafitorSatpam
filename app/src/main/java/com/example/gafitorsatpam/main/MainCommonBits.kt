@@ -1,5 +1,9 @@
 package com.example.gafitorsatpam.main
 
+import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.navOptions
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.example.gafitorsatpam.DestinationScreen
@@ -57,12 +62,45 @@ fun CommonProgressSpinner() {
     }
 }
 
-fun navigateTo(navController: NavController, dest: DestinationScreen) {
+data class NavParam(
+    val name: String,
+    val value: Parcelable
+)
+
+fun navigateTo(navController: NavController, dest: DestinationScreen, vararg params: NavParam) {
+    for (param in params) {
+        navController.currentBackStackEntry?.arguments?.putParcelable(param.name, param.value)
+    }
     navController.navigate(dest.route) {
-        popUpTo(dest.route)
+        popUpTo(dest.route) {
+            inclusive = false
+        }
         launchSingleTop = true
     }
+    Log.d("Navigation", "Navigated to ${dest.route} with params: $params")
 }
+
+//fun navigateTo(navController: NavController, dest: DestinationScreen, vararg params: NavParam) {
+//    val bundle = Bundle()
+//    for (param in params) {
+//        if (param.value is Parcelable) {
+//            bundle.putParcelable(param.name, param.value as Parcelable)
+//        }
+//        // Add other types if needed
+//    }
+//
+//    val navOptions = navOptions {
+//        // Specify the start destination to clear the back stack
+//        popUpTo(navController.graph.startDestinationId) {
+//            inclusive = false // Do not include the start destination itself
+//        }
+//        launchSingleTop = true
+//        restoreState = true
+//    }
+//
+//    navController.navigate(dest.route, bundle, navOptions)
+//}
+
 
 @Composable
 fun CheckSignedIn(navController: NavController, vm: GafitoViewModel) {
@@ -79,7 +117,8 @@ fun CheckSignedIn(navController: NavController, vm: GafitoViewModel) {
 @Composable
 fun CommonImage(
     data: String?,
-    modifier: Modifier = Modifier.wrapContentSize()
+    modifier: Modifier = Modifier
+        .wrapContentSize()
         .clip(CircleShape)
         .size(100.dp),
     contentScale: ContentScale = ContentScale.Crop
@@ -112,6 +151,26 @@ fun UserImageCard(
             )
         } else {
             CommonImage(data = userImage)
+        }
+    }
+}
+
+@Composable
+fun LaporanImageCard(
+    laporanImage: String?,
+    modifier: Modifier = Modifier
+        .padding(8.dp)
+        .size(80.dp)
+) {
+    Card(shape = CircleShape, modifier = modifier) {
+        if (laporanImage.isNullOrEmpty()) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_image_placeholder),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(Color.Gray)
+            )
+        } else {
+            CommonImage(data = laporanImage)
         }
     }
 }
