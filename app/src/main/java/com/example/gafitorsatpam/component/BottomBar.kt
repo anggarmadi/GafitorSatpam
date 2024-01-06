@@ -53,5 +53,6 @@ fun BottomBar(modifier: Modifier = Modifier, selectedItem: BottomBarItem, navCon
 @Composable
 fun BottomBarPreview() {
     GafitorSatpamTheme {
+
     }
 }

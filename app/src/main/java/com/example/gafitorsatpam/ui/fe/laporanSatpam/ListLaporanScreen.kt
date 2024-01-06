@@ -1,6 +1,9 @@
 package com.example.gafitorsatpam.ui.fe.laporanSatpam
 
 import android.annotation.SuppressLint
+import android.os.Parcel
+import android.os.Parcelable
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -63,11 +66,15 @@ fun ListLaporanScreen(navController: NavController, vm: GafitoViewModel) {
                     .padding(1.dp)
                     .fillMaxSize()
             ) { laporan ->
+                navController.currentBackStackEntry?.savedStateHandle?.set("laporan", laporan)
                 navigateTo(
                     navController,
                     DestinationScreen.DetailLaporan,
-                    NavParam("laporan", laporan)
+                    NavParam("laporan", laporan),
                 )
+
+                Log.d("laporan", "Laporan yang dikirim: $laporan")
+                Log.d("laporan", "Argumen navigasi: ${navController.currentBackStackEntry?.arguments}")
             }
             //kalau make tampilan galeri
 //            LaporanList(

@@ -62,23 +62,24 @@ fun CommonProgressSpinner() {
     }
 }
 
-data class NavParam(
-    val name: String,
-    val value: Parcelable
-)
+    data class NavParam(
+        val name: String,
+        val value: Parcelable
+    )
 
-fun navigateTo(navController: NavController, dest: DestinationScreen, vararg params: NavParam) {
-    for (param in params) {
-        navController.currentBackStackEntry?.arguments?.putParcelable(param.name, param.value)
-    }
-    navController.navigate(dest.route) {
-        popUpTo(dest.route) {
-            inclusive = false
+
+    fun navigateTo(navController: NavController, dest: DestinationScreen, vararg params: NavParam) {
+        for (param in params) {
+            navController.currentBackStackEntry?.arguments?.putParcelable(param.name, param.value)
         }
-        launchSingleTop = true
+        navController.navigate(dest.route) {
+            popUpTo(dest.route) {
+                inclusive = false
+            }
+            launchSingleTop = true
+        }
+        Log.d("Navigation", "Navigated to ${dest.route} with params: $params")
     }
-    Log.d("Navigation", "Navigated to ${dest.route} with params: $params")
-}
 
 //fun navigateTo(navController: NavController, dest: DestinationScreen, vararg params: NavParam) {
 //    val bundle = Bundle()
