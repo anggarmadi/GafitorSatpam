@@ -1,4 +1,4 @@
-package com.example.gafitorsatpam.ui.fe
+package com.example.gafitorsatpam.ui.fe.dataParkir
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement

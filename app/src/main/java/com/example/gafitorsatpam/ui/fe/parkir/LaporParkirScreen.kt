@@ -20,6 +20,7 @@ import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
+
     Scaffold(
         topBar = { TopBarAtas(screen = "Input Parkir") },
         bottomBar = { BottomBar(

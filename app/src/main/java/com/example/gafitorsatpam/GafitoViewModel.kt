@@ -215,21 +215,21 @@ class GafitoViewModel @Inject constructor(
     fun onNewLaporan(
         uri: Uri,
         nomorPolisi: String,
-        warna: String,
         merek: String,
-        onPostSuccess: () -> Unit
+        warna: String,
+        onLaporanSuccess: () -> Unit
     ) {
         uploadImage(uri) {
-            onCreateLaporan(it, nomorPolisi, warna, merek, onPostSuccess)
+            onCreateLaporan(it, nomorPolisi, merek, warna, onLaporanSuccess)
         }
     }
 
     fun onCreateLaporan(
         imageUri: Uri,
         nomorPolisi: String,
-        warna: String,
         merek: String,
-        onPostSuccess: () -> Unit
+        warna: String,
+        onLaporanSuccess: () -> Unit
     ) {
         inProgress.value = true
         val currenUid = auth.currentUser?.uid
@@ -245,8 +245,8 @@ class GafitoViewModel @Inject constructor(
                 name = currentName,
                 laporanImage = imageUri.toString(),
                 nomorPolisi = nomorPolisi,
-                warna = warna,
                 merek = merek,
+                warna = warna,
                 time = System.currentTimeMillis()
             )
 
@@ -255,7 +255,7 @@ class GafitoViewModel @Inject constructor(
                     popupNotification.value = Event("Berhasil membuat laporan")
                     inProgress.value = false
                     refreshLaporan()
-                    onPostSuccess.invoke()
+                    onLaporanSuccess.invoke()
                 }
                 .addOnFailureListener { exc ->
                     handleException(exc, "Gagal membuat laporan")
