@@ -54,7 +54,7 @@ fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
                 }
             }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.add_icon),
+                    painter = painterResource(id = R.drawable.scan_qr),
                     contentDescription = "Scan QR"
                 )
             }

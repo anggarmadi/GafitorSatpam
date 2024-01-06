@@ -9,17 +9,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gafitorsatpam.DestinationScreen
 import com.example.gafitorsatpam.GafitoViewModel
+import com.example.gafitorsatpam.R
 import com.example.gafitorsatpam.component.BottomBar
 import com.example.gafitorsatpam.component.TopBarAtas
+import com.example.gafitorsatpam.component.TopBarMenu
 //import com.example.gafitorsatpam.component.laporanComp.LaporanList
 import com.example.gafitorsatpam.component.laporanComp.ListLaporanView
 import com.example.gafitorsatpam.data.LaporanData
@@ -27,6 +32,7 @@ import com.example.gafitorsatpam.main.NavParam
 import com.example.gafitorsatpam.main.navigateTo
 import com.example.gafitorsatpam.model.BottomBarItem
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -39,13 +45,23 @@ fun ListLaporanScreen(navController: NavController, vm: GafitoViewModel) {
     val laporans = vm.laporans.value
 
     Scaffold(
-        topBar = { TopBarAtas("List Laporan Satpam") },
+        topBar = { TopBarMenu("List Laporan Satpam") },
         bottomBar = {
             BottomBar(
                 selectedItem = BottomBarItem.LAPORPARKIR,
                 navController = navController
             )
+        },floatingActionButton = {
+            FloatingActionButton(onClick = {
+                navigateTo(navController, DestinationScreen.LaporKehilangan)
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.add_icon),
+                    contentDescription = "Tambah Laporan"
+                )
+            }
         },
+
         modifier = Modifier
 //            .padding(16.dp)
     ) { paddingValues ->
