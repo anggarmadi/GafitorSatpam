@@ -1,5 +1,6 @@
 package com.example.gafitorsatpam.ui.fe.parkir
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -51,6 +52,7 @@ fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
             FloatingActionButton(onClick = {
                 scope.launch {
                     barcodeScanner.startScan()
+                    Log.d("status", "Bisa bisa")
                 }
             }) {
                 Icon(

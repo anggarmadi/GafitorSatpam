@@ -3,7 +3,6 @@
 package com.example.gafitorsatpam
 
 import android.os.Bundle
-import android.os.Parcel
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -89,9 +88,9 @@ fun GafitoApp() {
             ListLaporanScreen(navController = navController, vm = vm)
         }
         composable(DestinationScreen.DetailLaporan.route) {
-//            val laporanData = navController.currentBackStackEntry?.arguments?.getParcelable<LaporanData>("laporan")
             val laporanData = navController.previousBackStackEntry?.savedStateHandle?.get<LaporanData>("laporan")
             Log.d("laporan", "Argumen navigasi: ${navController.currentBackStackEntry?.arguments}")
+            Log.d("laporan", "Argumen navigasi: ${navController.previousBackStackEntry?.savedStateHandle}")
             // Periksa apakah laporan adalah null
             if (laporanData == null) {
                 // Tampilkan pesan kesalahan
