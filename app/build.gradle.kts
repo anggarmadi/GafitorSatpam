@@ -54,11 +54,15 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation ("androidx.navigation:navigation-compose:2.4.0-alpha08")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
@@ -106,7 +110,11 @@ dependencies {
     implementation ("androidx.compose.runtime:runtime-livedata:1.5.4")
 
     //alternatif scanner
-    implementation ("com.google.mlkit:barcode-scanning:17.0.3")
+    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation ("com.google.zxing:core:3.4.1")
+
+    implementation ("androidx.activity:activity-ktx:1.4.0")
+
 
 
 

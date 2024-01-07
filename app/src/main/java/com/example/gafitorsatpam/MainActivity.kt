@@ -4,13 +4,17 @@ package com.example.gafitorsatpam
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,11 +30,31 @@ import com.example.gafitorsatpam.ui.fe.laporanSatpam.DetailLaporanScreen
 import com.example.gafitorsatpam.ui.fe.laporanSatpam.ListLaporanScreen
 import com.example.gafitorsatpam.ui.fe.parkir.LaporParkirScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
-import com.example.simpleqrscanner.ViewModel.MainViewModel
+import com.example.simpleqrscanner.ViewModel.QRScanner
+import com.journeyapps.barcodescanner.ScanContract
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private var textResult = mutableStateOf("")
+    private val barcodeLauncher = registerForActivityResult(ScanContract()) { result ->
+        if (result == null) {
+            Toast.makeText(this@MainActivity, "Dibatalkan", Toast.LENGTH_LONG).show()
+        } else {
+            textResult.value = result.contents
+        }
+    }
+
+    private val qrScanner = QRScanner(this, barcodeLauncher)
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ){
+        isGranted ->
+        if (isGranted){
+            qrScanner.tampilkanKamera()
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -40,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    GafitoApp()
+                    GafitoApp(qrScanner, textResult)
                 }
             }
         }
@@ -62,9 +86,11 @@ sealed class DestinationScreen(val route: String) {
 
 
 @Composable
-fun GafitoApp() {
+fun GafitoApp(qrScanner: QRScanner, hasil: MutableState<String>) {
+    val hasil = hasil
     val vm = hiltViewModel<GafitoViewModel>()
     val navController = rememberNavController()
+    val qrScanner = qrScanner
 
     NotificationMessage(vm = vm)
 
@@ -76,7 +102,7 @@ fun GafitoApp() {
             ParkirDataScreen(navController = navController, vm = vm)
         }
         composable(DestinationScreen.LaporParkir.route) {
-            LaporParkirScreen(navController = navController, vm =vm)
+            LaporParkirScreen(navController = navController, vm =vm, qrScanner, hasil)
         }
         composable(DestinationScreen.LaporKehilangan.route) { navBackStackEntry ->
             val imageUri = navBackStackEntry.arguments?.getString("imageUri")

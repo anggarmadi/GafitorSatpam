@@ -2,7 +2,6 @@ package com.example.gafitorsatpam.viewModel
 
 import android.content.Context
 import android.os.Build
-import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
@@ -11,17 +10,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class BarrcodeScanner(
     appContext: Context
 ) {
-    val appContext = appContext
     val barcodeResult = MutableStateFlow<String?>(null)
+    val options = GmsBarcodeScannerOptions.Builder()
+        .setBarcodeFormats(
+            Barcode.FORMAT_QR_CODE,
+            Barcode.FORMAT_AZTEC)
+        .build()
+    val scanner = GmsBarcodeScanning.getClient(appContext, options)
     suspend fun startScan(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
-            val options = GmsBarcodeScannerOptions.Builder()
-                .setBarcodeFormats(
-                    Barcode.FORMAT_QR_CODE,
-                    Barcode.FORMAT_AZTEC)
-                .build()
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
 
-            val scanner = GmsBarcodeScanning.getClient(appContext, options)
+
+
             try {
                 scanner.startScan()
                     .addOnSuccessListener { barcode ->
@@ -37,9 +37,9 @@ class BarrcodeScanner(
 
             }
 
-        } else{
-
-        }
+//        } else{
+//
+//        }
 
     }
 }
