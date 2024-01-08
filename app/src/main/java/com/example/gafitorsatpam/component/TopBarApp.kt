@@ -35,15 +35,15 @@ fun TopBarAtas(screen: String, navController: NavController) {
             modifier = Modifier
                 .padding(16.dp)
         ) {
-//            Image(
-//                painter = painterResource(id = R.drawable.back_icon),
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .padding(end = 16.dp)
-//                    .clickable {
-//                        navController.popBackStack()
-//                    }
-//            )
+            Image(
+                painter = painterResource(id = R.drawable.back_icon),
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .clickable {
+                        navController.popBackStack()
+                    }
+            )
             Spacer(modifier = Modifier.padding(end = 16.dp))
             Text(
                 text = screen,
