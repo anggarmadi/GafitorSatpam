@@ -74,6 +74,12 @@ fun FormParkir(
                 modifier = Modifier
                     .fillMaxWidth()
             )
+            Image(
+                painter = painterResource(id = R.drawable.tutorpark),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
             Text(
                 text = "Nomor Polisi",
                 fontSize = 20.sp,
