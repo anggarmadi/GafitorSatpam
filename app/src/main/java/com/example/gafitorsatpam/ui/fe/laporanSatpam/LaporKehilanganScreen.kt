@@ -29,7 +29,7 @@ import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LaporKehilanganScreen(navController: NavController, vm: GafitoViewModel, encodedUri: String) {
-    val navController = rememberNavController()
+//    val navController = rememberNavController()
     Scaffold(
         topBar = { TopBarAtas(screen = "Lapor Kehilangan", navController) },
 //        floatingActionButton = {

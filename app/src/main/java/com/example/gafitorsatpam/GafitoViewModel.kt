@@ -16,6 +16,7 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.lang.Exception
+import java.lang.invoke.TypeDescriptor
 import java.util.UUID
 import javax.inject.Inject
 
@@ -178,6 +179,7 @@ class GafitoViewModel @Inject constructor(
                 userData.value = user
                 inProgress.value = false
                 refreshLaporan()
+                refreshParkir()
             }
             .addOnFailureListener { exc ->
                 handleException(exc, "Cannot retrieve user data")
@@ -224,10 +226,11 @@ class GafitoViewModel @Inject constructor(
         nomorPolisi: String,
         merek: String,
         warna: String,
+        description: String,
         onLaporanSuccess: () -> Unit
     ) {
         uploadImage(uri) {
-            onCreateLaporan(it, nomorPolisi, merek, warna, onLaporanSuccess)
+            onCreateLaporan(it, nomorPolisi, merek, warna, description, onLaporanSuccess)
         }
     }
 
@@ -236,6 +239,7 @@ class GafitoViewModel @Inject constructor(
         nomorPolisi: String,
         merek: String,
         warna: String,
+        description: String,
         onLaporanSuccess: () -> Unit
     ) {
         inProgress.value = true
@@ -254,6 +258,7 @@ class GafitoViewModel @Inject constructor(
                 nomorPolisi = nomorPolisi,
                 merek = merek,
                 warna = warna,
+                description = description,
                 time = System.currentTimeMillis()
             )
 
@@ -344,77 +349,118 @@ class GafitoViewModel @Inject constructor(
 
     // Fungsi untuk membuat collection parkir berdasarkan data nomorPolisi
     fun onCreateParkir(noPolisi: String) {
-        inProgress.value = true
+        if (noPolisi.isEmpty()) {
+            handleException(customMessage = "Please fill in all fields")
+            return
+        } else {
 
-        val parkirData = ParkirData()
-        parkirData.parkirId = UUID.randomUUID().toString()
-        parkirData.noPolisi = noPolisi
-        parkirData.time = System.currentTimeMillis()
-        val parkirRef = db.collection(PARKIR).whereEqualTo("noPolisi", noPolisi)
-        parkirRef.get().addOnSuccessListener { querySnapshot ->
-            // Jika data parkir ditemukan, maka pindahkan data tersebut ke collection history
-            if (querySnapshot.size() > 0) {
-                val parkir = querySnapshot.documents[0].toObject(ParkirData::class.java)
-                // Membuat dokumen baru di collection history dengan data parkir yang sama
-                db.collection(HISTORY).document(parkir?.parkirId!!).set(parkir)
-                    .addOnSuccessListener {
-                        // Tampilkan pesan sukses jika berhasil memindahkan data parkir ke collection history
-                        popupNotification.value = Event("Data Parkir berhasil dipindahkan ke history")
-                        inProgress.value = false
-                    }
-                    .addOnFailureListener { exc ->
-                        // Tampilkan pesan error jika gagal memindahkan data parkir ke collection history
-                        handleException(exc, "Gagal memindahkan data Parkir")
-                        inProgress.value = false
-                    }
-                // Menghapus dokumen lama di collection parkir dengan data parkir yang sama
-                db.collection(PARKIR).document(parkir.parkirId!!).delete()
-                    .addOnSuccessListener {
-                        // Tampilkan pesan sukses jika berhasil menghapus data parkir dari collection parkir
-                        popupNotification.value = Event("Data Parkir berhasil dihapus")
-                        inProgress.value = false
-                    }
-                    .addOnFailureListener { exc ->
-                        // Tampilkan pesan error jika gagal menghapus data parkir dari collection parkir
-                        handleException(exc, "Gagal menghapus data Parkir")
-                        inProgress.value = false
-                    }
-            } else {
-                val userRef = db.collection(USERS).whereEqualTo("noPolisi", noPolisi)
-                userRef.get().addOnSuccessListener { querySnapshot ->
-                    // Jika data user ditemukan, mengisi data userId, merek, name, dan imageUrl dari user
-                    if (querySnapshot.size() > 0) {
-                        val user = querySnapshot.documents[0].toObject(UserData::class.java)
-                        parkirData.userId = user?.userId
-                        parkirData.merek = user?.jenisMotor
-                        parkirData.name = user?.name
-                        parkirData.imageUrl = user?.imageUrl
-                    }
-                    // Menyimpan data parkir ke collection parkir
-                    db.collection(PARKIR).document(parkirData.parkirId!!).set(parkirData)
+            inProgress.value = true
+            val parkirData = ParkirData()
+
+            parkirData.parkirId = UUID.randomUUID().toString()
+            parkirData.noPolisi = noPolisi
+            parkirData.time = System.currentTimeMillis()
+            val parkirRef = db.collection(PARKIR).whereEqualTo("noPolisi", noPolisi)
+            parkirRef.get().addOnSuccessListener { querySnapshot ->
+                // Jika data parkir ditemukan, maka pindahkan data tersebut ke collection history
+                if (querySnapshot.size() > 0) {
+                    val parkir = querySnapshot.documents[0].toObject(ParkirData::class.java)
+                    // Membuat dokumen baru di collection history dengan data parkir yang sama
+                    db.collection(HISTORY).document(parkir?.parkirId!!).set(parkir)
                         .addOnSuccessListener {
-                            // Tampilkan pesan sukses jika berhasil menyimpan data parkir
-                            popupNotification.value = Event("Data Parkir berhasil disimpan")
+                            // Tampilkan pesan sukses jika berhasil memindahkan data parkir ke collection history
+                            popupNotification.value = Event("Data Parkir berhasil dipindahkan ke history")
+                            inProgress.value = false
+                            refreshParkir()
+                        }
+                        .addOnFailureListener { exc ->
+                            // Tampilkan pesan error jika gagal memindahkan data parkir ke collection history
+                            handleException(exc, "Gagal memindahkan data Parkir")
+                            inProgress.value = false
+                        }
+                    // Menghapus dokumen lama di collection parkir dengan data parkir yang sama
+                    db.collection(PARKIR).document(parkir.parkirId!!).delete()
+                        .addOnSuccessListener {
+                            // Tampilkan pesan sukses jika berhasil menghapus data parkir dari collection parkir
+                            popupNotification.value = Event("Data Parkir berhasil dihapus")
                             inProgress.value = false
                         }
                         .addOnFailureListener { exc ->
-                            // Tampilkan pesan error jika gagal menyimpan data parkir
-                            handleException(exc, "Gagal menyimpan data Parkir")
+                            // Tampilkan pesan error jika gagal menghapus data parkir dari collection parkir
+                            handleException(exc, "Gagal menghapus data Parkir")
+                            inProgress.value = false
+                        }
+                } else {
+                    val userRef = db.collection(USERS).whereEqualTo("noPolisi", noPolisi)
+                    userRef.get().addOnSuccessListener { querySnapshot ->
+                        // Jika data user ditemukan, mengisi data userId, merek, name, dan imageUrl dari user
+                        if (querySnapshot.size() > 0) {
+                            val user = querySnapshot.documents[0].toObject(UserData::class.java)
+                            parkirData.userId = user?.userId
+                            parkirData.merek = user?.jenisMotor
+                            parkirData.name = user?.name
+                            parkirData.imageUrl = user?.imageUrl
+
+                            // Menyimpan data parkir ke collection parkir
+                            db.collection(PARKIR).document(parkirData.parkirId!!).set(parkirData)
+                                .addOnSuccessListener {
+                                    // Tampilkan pesan sukses jika berhasil menyimpan data parkir
+                                    popupNotification.value = Event("Data Parkir berhasil disimpan")
+                                    inProgress.value = false
+                                }
+                                .addOnFailureListener { exc ->
+                                    // Tampilkan pesan error jika gagal menyimpan data parkir
+                                    handleException(exc, "Gagal menyimpan data Parkir")
+                                    inProgress.value = false
+                                }
+                        } else {
+                            // Jika data user tidak ditemukan, tampilkan pesan error dan batalkan proses penyimpanan data parkir
+                            popupNotification.value = Event("Data User Tidak Ditemukan")
+                            return@addOnSuccessListener
+                        }
+                    }
+                        .addOnFailureListener { exc ->
+                            // Tampilkan pesan error jika gagal mencari data user
+                            handleException(exc, "Gagal mencari data User")
                             inProgress.value = false
                         }
                 }
-                    .addOnFailureListener { exc ->
-                        // Tampilkan pesan error jika gagal mencari data user
-                        handleException(exc, "Gagal mencari data User")
-                        inProgress.value = false
-                    }
             }
-            }
-            .addOnFailureListener { exc ->
-                // Tampilkan pesan error jika gagal mencari data parkir
-                handleException(exc, "Gagal mencari data Parkir")
-                inProgress.value = false
-            }
+                .addOnFailureListener { exc ->
+                    // Tampilkan pesan error jika gagal mencari data parkir
+                    handleException(exc, "Gagal mencari data Parkir")
+                    inProgress.value = false
+                }
+        }
+    }
+
+    fun refreshParkir() {
+        val currentUid = auth.currentUser?.uid
+
+        if (currentUid != null) {
+            parkirProgress.value = true
+            db.collection(PARKIR).get()
+                .addOnSuccessListener { documents ->
+                    convertParkir(documents, parkirs)
+                    parkirProgress.value = false
+                }
+                .addOnFailureListener { exc ->
+                    handleException(exc, "Gagal mengambil data parkir")
+                    parkirProgress.value = false
+                }
+        } else {
+            handleException(customMessage = "Error! Gagal memuat data parkir")
+        }
+    }
+
+    private fun convertParkir(documents: QuerySnapshot, outState: MutableState<List<ParkirData>>) {
+        val newParkir = mutableListOf<ParkirData>()
+        documents.forEach { doc ->
+            val parkir = doc.toObject<ParkirData>()
+            newParkir.add(parkir)
+        }
+        val sortedLaporans = newParkir.sortedByDescending { it.time }
+        outState.value = sortedLaporans
     }
 
 }

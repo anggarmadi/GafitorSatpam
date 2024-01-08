@@ -23,25 +23,22 @@ import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DetailLaporanScreen(navController: NavController, vm: GafitoViewModel, laporan: LaporanData) {
-//    Scaffold(
-//        topBar = {TopBarAtas("Detail Laporan")}
-//    ) {
-//            paddingValues ->
-//        Column(
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            modifier = Modifier
-//                .padding(paddingValues)
-//
-//        ) {
-////        your code compose here
-//            DetailLaporan()
-//
-//        }
-//    }
-    Log.d("DetailLaporanScreen", "Received laporan data: $laporan")
+    Scaffold(
+        topBar = {TopBarAtas("Detail Laporan", navController)}
+    ) {
+            paddingValues ->
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(paddingValues)
 
-    Text(text = "test ${laporan.merek}")
+        ) {
+//        your code compose here
+            DetailLaporan(navController = navController, vm = vm, laporan = laporan)
+
+        }
+    }
 }
 
 @Preview(showBackground = true)

@@ -16,19 +16,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.gafitorsatpam.DestinationScreen
+import com.example.gafitorsatpam.GafitoViewModel
+import com.example.gafitorsatpam.data.LaporanData
+import com.example.gafitorsatpam.data.ParkirData
+import com.example.gafitorsatpam.main.navigateTo
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
 @Composable
-fun ParkirData(modifier: Modifier = Modifier){
-
-    ReportData(
-        countKendaraan = 70
-    )
-
-}
-
-@Composable
-fun ReportData(countKendaraan: Int, modifier: Modifier = Modifier){
+fun ReportData(modifier: Modifier = Modifier, navController: NavController, parkirs: List<ParkirData>,){
     Surface() {
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -48,7 +47,7 @@ fun ReportData(countKendaraan: Int, modifier: Modifier = Modifier){
                         .padding(bottom = 32.dp)
                 )
                 Text(
-                    text = "$countKendaraan",
+                    text = "${parkirs.size}",
                     fontSize = 100.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -60,7 +59,7 @@ fun ReportData(countKendaraan: Int, modifier: Modifier = Modifier){
                 )
                 Spacer(modifier = Modifier.padding(16.dp))
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { navigateTo(navController, DestinationScreen.ListParkir) },
                     modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 8.dp),
 //                        .fillMaxWidth(),
@@ -77,6 +76,5 @@ fun ReportData(countKendaraan: Int, modifier: Modifier = Modifier){
 @Composable
 fun GreetingPreview3() {
     GafitorSatpamTheme {
-        ParkirData()
     }
 }
