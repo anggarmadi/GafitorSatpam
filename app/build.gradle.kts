@@ -54,15 +54,19 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation ("androidx.navigation:navigation-compose:2.4.0-alpha08")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation ("androidx.navigation:navigation-compose:2.7.6")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -102,9 +106,15 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC")
 
     // bar code
-    implementation("com.google.android.gms:play-services-code-scanner:16.0.0-beta3")
+    implementation("com.google.android.gms:play-services-code-scanner:16.0.0")
+    implementation("com.google.android.gms:play-services-base:18.2.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.5.4")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
-    implementation ("androidx.compose.runtime:runtime-livedata:1.2.0")
+
+    implementation ("androidx.activity:activity-ktx:1.8.2")
+
 
     //swipe refresh
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")

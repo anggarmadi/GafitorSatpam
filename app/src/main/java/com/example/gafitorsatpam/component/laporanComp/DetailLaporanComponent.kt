@@ -38,12 +38,16 @@ import com.example.gafitorsatpam.main.navigateTo
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 import com.example.gafitorsatpam.ui.theme.Warning
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailLaporan(navController: NavController, vm: GafitoViewModel, laporan: LaporanData) {
+fun  DetailLaporan(navController: NavController, vm: GafitoViewModel, laporan: LaporanData) {
 
     val userData = vm.userData.value
+    val waktu = laporan.time ?: ""
+    val formated = SimpleDateFormat("dd/MM/yyyy HH:mm")
+    val waktunya = formated.format(waktu)
 
 
     Box(
@@ -98,7 +102,7 @@ fun DetailLaporan(navController: NavController, vm: GafitoViewModel, laporan: La
                     .fillMaxWidth()
             )
             TextField(
-                value = "19/10/2023, 04:43 PM",
+                value = waktunya,
                 label = { Text(text = "Tanggal Laporan") },
                 enabled = false,
                 onValueChange = {},
@@ -108,7 +112,7 @@ fun DetailLaporan(navController: NavController, vm: GafitoViewModel, laporan: La
 
             )
             TextField(
-                value = "Laporan Kunci Tertinggal",
+                value = laporan.description ?: "",
                 label = { Text(text = "Deskripsi Laporan") },
                 enabled = false,
                 onValueChange = {},
@@ -122,7 +126,10 @@ fun DetailLaporan(navController: NavController, vm: GafitoViewModel, laporan: La
                     .padding(8.dp)
             ) {
                 Button(
-                    onClick = { navigateTo(navController, DestinationScreen.EditLaporan, NavParam("laporan", laporan) ) },
+                    onClick = {
+                        navController.currentBackStackEntry?.savedStateHandle?.set("laporan", laporan)
+                        navigateTo(navController, DestinationScreen.EditLaporan, NavParam("laporan", laporan) )
+                              },
                     colors = ButtonDefaults.buttonColors(Warning),
                     modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp),

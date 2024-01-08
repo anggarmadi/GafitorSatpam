@@ -3,6 +3,7 @@
 package com.example.gafitorsatpam.component.laporanComp
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -81,7 +82,7 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Card {
-                if (imageUri.isEmpty()) {
+                if (imageUri == "{imageUri}") {
                     Image(
                         painter = painterResource(id = R.drawable.ic_image_placeholder),
                         contentDescription = null,

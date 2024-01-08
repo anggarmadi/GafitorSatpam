@@ -13,9 +13,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gafitorsatpam.DestinationScreen
 import com.example.gafitorsatpam.GafitoViewModel
+import com.example.gafitorsatpam.component.TopBarAtas
 import com.example.gafitorsatpam.component.laporanComp.FormEditLaporan
 import com.example.gafitorsatpam.data.LaporanData
 import com.example.gafitorsatpam.main.navigateTo
@@ -30,8 +32,10 @@ fun EditLaporanScreen(navController: NavController, vm: GafitoViewModel, laporan
     var merek by rememberSaveable { mutableStateOf(laporanAja?.merek ?: "") }
     var warna by rememberSaveable { mutableStateOf(laporanAja?.warna ?: "") }
     var description by rememberSaveable { mutableStateOf(laporanAja?.description ?: "") }
+    var laporanImage by rememberSaveable { mutableStateOf(laporanAja?.laporanImage ?: "") }
 
     Scaffold(
+        topBar = { TopBarAtas("Edit Laporan", navController) }
 
     ) {
             paddingValues ->
@@ -40,6 +44,7 @@ fun EditLaporanScreen(navController: NavController, vm: GafitoViewModel, laporan
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(paddingValues)
+                .padding(top = 8.dp)
 
         ) {
             FormEditLaporan(
@@ -53,7 +58,8 @@ fun EditLaporanScreen(navController: NavController, vm: GafitoViewModel, laporan
                 onMerekChange = { merek = it },
                 onWarnaChange = { warna = it },
                 onDescriptionChange = { description = it },
-                onSave = {  }
+                onSave = {  },
+                encodedUri = laporanImage
             )
 
         }

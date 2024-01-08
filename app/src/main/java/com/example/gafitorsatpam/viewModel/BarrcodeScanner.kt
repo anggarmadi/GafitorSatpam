@@ -14,24 +14,22 @@ class BarrcodeScanner(
             Barcode.FORMAT_QR_CODE,
             Barcode.FORMAT_AZTEC)
         .build()
-
     private val scanner = GmsBarcodeScanning.getClient(appContext, options)
     val barcodeResult = MutableStateFlow<String?>(null)
-
     suspend fun startScan(){
-        try {
-            scanner.startScan()
-                .addOnSuccessListener { barcode ->
-                    barcodeResult.value = barcode.displayValue
-                }
-                .addOnCanceledListener {
-                    barcodeResult.value = "Dibatalkan"
-                }
-                .addOnFailureListener {
-                    barcodeResult.value = "Gagal"
-                }
-        } catch (e: Exception){
+            try {
+                scanner.startScan()
+                    .addOnSuccessListener { barcode ->
+                        barcodeResult.value = barcode.displayValue
+                    }
+                    .addOnCanceledListener {
+                        barcodeResult.value = "Dibatalkan"
+                    }
+                    .addOnFailureListener {
+                        barcodeResult.value = "Gagal"
+                    }
+            } catch (e: Exception){
 
-        }
+            }
     }
 }
