@@ -404,6 +404,7 @@ class GafitoViewModel @Inject constructor(
                             // Menyimpan data parkir ke collection parkir
                             db.collection(PARKIR).document(parkirData.parkirId!!).set(parkirData)
                                 .addOnSuccessListener {
+                                    refreshParkir()
                                     // Tampilkan pesan sukses jika berhasil menyimpan data parkir
                                     popupNotification.value = Event("Data Parkir berhasil disimpan")
                                     inProgress.value = false

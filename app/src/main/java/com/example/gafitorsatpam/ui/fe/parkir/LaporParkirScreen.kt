@@ -25,18 +25,23 @@ import com.example.gafitorsatpam.component.parkirComp.FormParkir
 import com.example.gafitorsatpam.model.BottomBarItem
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 import com.example.gafitorsatpam.viewModel.BarrcodeScanner
+import com.example.gafitorsatpam.viewModel.QRScanner
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
+    var pindaiQr :QRScanner
+
     var barcodeScanner: BarrcodeScanner
     val context = LocalContext.current
-    val view = LocalView.current
     barcodeScanner = BarrcodeScanner(context)
+    pindaiQr = QRScanner(context)
 
     //simpan hasil scan
     var barcodeResult = barcodeScanner.barcodeResult.collectAsState()
+
+    var hasilPindai = pindaiQr.hasilPindai.collectAsState()
 
 
     val scope = rememberCoroutineScope()
@@ -49,7 +54,7 @@ fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 scope.launch {
-                    barcodeScanner.startScan()
+                    pindaiQr.startScan()
                 }
             }) {
                 Icon(
@@ -68,7 +73,7 @@ fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
 
         ) {
 //        your code compose here
-            FormParkir(navController, vm, barcodeResult.value)
+            FormParkir(navController, vm, hasilPindai.value)
 
         }
     }

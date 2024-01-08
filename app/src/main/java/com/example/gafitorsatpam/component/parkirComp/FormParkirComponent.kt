@@ -68,13 +68,13 @@ fun FormParkir(
     val focusManager = LocalFocusManager.current
 
     Log.d("QR", "Bisa kok, $hasil")
-//    if (hasil != null ){
-//        if (hasil != "Gagal" || hasil != "Dibatalakan" || hasil != "No plat tidak valid"){
-//            firstLetter = hasil.split(" ")[0] // "BA"
-//            licensePlateNumber = hasil.split(" ")[1] // "123"
-//            secondLetter = hasil.split(" ")[2] // "CA"
-//        }
-//    }
+    if (hasil != null ){
+        if (hasil != "Gagal" || hasil != "Batal" ){
+            firstLetter = hasil.split(" ")[0] // "BA"
+            licensePlateNumber = hasil.split(" ")[1] // "123"
+            secondLetter = hasil.split(" ")[2] // "CA"
+        }
+    }
 
     Column(
         modifier = Modifier
