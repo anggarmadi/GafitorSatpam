@@ -28,6 +28,8 @@ import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParkirDataScreen(navController: NavController, vm: GafitoViewModel) {
+    val parkirs = vm.parkirs.value
+
     Scaffold(
         topBar = { TopBarMenu(screen = "Data Parkir")},
         bottomBar = { BottomBar(
@@ -45,7 +47,7 @@ fun ParkirDataScreen(navController: NavController, vm: GafitoViewModel) {
 
         ) {
 //        your code compose her
-            ReportData(countKendaraan = 77)
+            ReportData(navController = navController, parkirs = parkirs)
 
         }
     }

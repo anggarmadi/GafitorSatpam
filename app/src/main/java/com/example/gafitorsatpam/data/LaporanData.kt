@@ -13,6 +13,7 @@ data class LaporanData (
     val merek: String? = null,
     val nomorPolisi: String? = null,
     val warna: String? = null,
+    val description: String? = null,
     val time: Long? = null
 ): Parcelable
 //{

@@ -49,10 +49,7 @@ import java.text.SimpleDateFormat
 
 @Composable
 fun PhotoLaporan(imageUrl: String?) {
-    Box(
-        modifier = Modifier
-            .padding(top = 16.dp)
-    ) {
+    Box{
         LaporanImageCard(
             laporanImage = imageUrl,
             modifier = Modifier

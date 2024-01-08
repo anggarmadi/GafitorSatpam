@@ -57,6 +57,7 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
     var secondLetter by remember { mutableStateOf("") }
     var merek by remember { mutableStateOf("")}
     var warna by remember { mutableStateOf("")}
+    var description by remember { mutableStateOf("") }
 
     val nomorPolisi = "$firstLetter $licensePlateNumber $secondLetter"
     var imageUri by remember { mutableStateOf(encodedUri) }
@@ -191,6 +192,14 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
                             .padding(bottom = 16.dp)
                             .fillMaxWidth()
                     )
+                    TextField(
+                        value = description,
+                        label = { Text(text = "Deskripsi") },
+                        onValueChange = {description = it},
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .fillMaxWidth()
+                    )
                 }
             }
         }
@@ -198,7 +207,9 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
             onClick = {
                 focusManager.clearFocus()
                 //call the VM
-                vm.onNewLaporan(Uri.parse(imageUri), nomorPolisi, merek, warna) { navController.popBackStack() }
+                vm.onNewLaporan(Uri.parse(imageUri), nomorPolisi, merek, warna, description) {
+                    navController.popBackStack()
+                }
             },
             modifier = Modifier
                 .padding(8.dp)
@@ -207,12 +218,12 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
         ) {
             Text(text = "Kirim")
         }
-        
+        val isLoading = vm.inProgress.value
+        if (isLoading) {
+            CommonProgressSpinner()
+        }
+
         Spacer(modifier = Modifier.padding(64.dp))
     }
-
-    val inProgress = vm.inProgress.value
-    if (inProgress)
-        CommonProgressSpinner()
 }
 

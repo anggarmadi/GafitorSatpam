@@ -1,7 +1,5 @@
 package com.example.gafitorsatpam.main
 
-import android.os.Bundle
-import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
@@ -31,7 +29,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.navOptions
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.example.gafitorsatpam.DestinationScreen
@@ -172,6 +169,26 @@ fun LaporanImageCard(
             )
         } else {
             CommonImage(data = laporanImage)
+        }
+    }
+}
+
+@Composable
+fun ParkirImageCard(
+    parkirImage: String?,
+    modifier: Modifier = Modifier
+        .padding(8.dp)
+        .size(80.dp)
+) {
+    Card(shape = CircleShape, modifier = modifier) {
+        if (parkirImage.isNullOrEmpty()) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_image_placeholder),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(Color.Gray)
+            )
+        } else {
+            CommonImage(data = parkirImage)
         }
     }
 }
