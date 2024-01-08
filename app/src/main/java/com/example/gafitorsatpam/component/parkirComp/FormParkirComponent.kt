@@ -57,15 +57,10 @@ fun FormParkir(
     barcodeValue: String?
 ) {
     var hasil = barcodeValue
-    var hp = ""
-    var nopol = ""
-    var hk = ""
-
 
     var licensePlateNumber by remember { mutableStateOf("") }
     var firstLetter by remember { mutableStateOf("") }
     var secondLetter by remember { mutableStateOf("") }
-
     val noPolisi = "$firstLetter $licensePlateNumber $secondLetter"
 
     val focusManager = LocalFocusManager.current
@@ -73,9 +68,9 @@ fun FormParkir(
     Log.d("QR", "Bisa kok, $hasil")
     if (hasil != null ){
         if (hasil != "Gagal" || hasil != "Batal" ){
-            firstLetter = hasil.split(" ")[0] // "BA"
-            licensePlateNumber = hasil.split(" ")[1] // "123"
-            secondLetter = hasil.split(" ")[2] // "CA"
+            licensePlateNumber = remember { mutableStateOf(hasil.split(" ")[1]) }.value
+            firstLetter = remember { mutableStateOf(hasil.split(" ")[0]) }.value
+            secondLetter = remember { mutableStateOf(hasil.split(" ")[2]) }.value
         }
     }
 
@@ -178,7 +173,7 @@ fun FormParkir(
                 .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
         ) {
-            Text(text = hasil?: "Kirim")
+            Text(text = "Kirim")
         }
 //        Button(
 //            onClick = {  },

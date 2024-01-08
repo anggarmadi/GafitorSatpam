@@ -62,11 +62,13 @@ class QRScanner(appContext: Context) {
                 }
                 .addOnCanceledListener {
                     // Task canceled
-                    hasilPindai.value = "Batal"
+//                    hasilPindai.value = "Batal"
+                    Toast.makeText(context, "Batal", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener { e ->
                     // Task failed with an exception
-                    hasilPindai.value = "Gagal"
+//                    hasilPindai.value = "Gagal"
+                    Toast.makeText(context, "Gagal", Toast.LENGTH_SHORT).show()
                     Log.e("ErorQR","Error bre,, $e")
                 }
         } catch (e: Exception){

@@ -125,15 +125,15 @@ fun GafitoApp() {
 //        }
         composable(DestinationScreen.EditLaporan.route) {
             val laporanData = navController.previousBackStackEntry?.savedStateHandle?.get<LaporanData>("laporan")
-            Log.d("laporan", "Argumen navigasi: ${navController.currentBackStackEntry?.arguments}")
+            Log.d("laporanDet", "Argumen navigasi: ${navController.currentBackStackEntry?.arguments}")
             // Periksa apakah laporan adalah null
             if (laporanData == null) {
                 // Tampilkan pesan kesalahan
-                Log.e("laporan", "laporan tidak ditemukan nih, kosong")
+                Log.e("laporanD", "laporan tidak ditemukan nih, kosong")
             }
             val test = navController.currentBackStackEntry
-            Log.d("laporanData", "laporanData to $laporanData")
-            Log.d("Tst", "ada ga $test")
+            Log.d("DetData", "laporanData to $laporanData")
+            Log.d("Tst2", "ada ga $test")
 
             laporanData?.let {
                 EditLaporanScreen(
