@@ -60,7 +60,7 @@ sealed class DestinationScreen(val route: String) {
     }
     object ListLaporan : DestinationScreen("list_laporan")
     object ListParkir : DestinationScreen("list_parkir")
-    object EditLaporan : DestinationScreen("edit_laporan")
+    object EditLaporan : DestinationScreen("edit_laporan/{imageUri}")
 }
 
 
@@ -86,6 +86,7 @@ fun GafitoApp() {
         }
         composable(DestinationScreen.LaporKehilangan.route) { navBackStackEntry ->
             val imageUri = navBackStackEntry.arguments?.getString("imageUri")
+            Log.d("Tst2", "ada ga di awal $imageUri")
             imageUri?.let {
                 LaporKehilanganScreen(navController = navController, vm = vm, encodedUri = it)
             }
@@ -123,7 +124,7 @@ fun GafitoApp() {
 //            val laporanId = backStackEntry.arguments?.getString("laporanId")
 //            // Tampilkan DetailLaporanView dengan laporanId
 //        }
-        composable(DestinationScreen.EditLaporan.route) {
+        composable(DestinationScreen.EditLaporan.route) {navBackStackEntry ->
             val laporanData = navController.previousBackStackEntry?.savedStateHandle?.get<LaporanData>("laporan")
             Log.d("laporanDet", "Argumen navigasi: ${navController.currentBackStackEntry?.arguments}")
             // Periksa apakah laporan adalah null
@@ -135,13 +136,29 @@ fun GafitoApp() {
             Log.d("DetData", "laporanData to $laporanData")
             Log.d("Tst2", "ada ga $test")
 
+            val imageUri = navBackStackEntry.arguments?.getString("imageUri")
+            Log.d("Tst2", "ada ga disini $imageUri")
+            var encoded = "{imageUri}"
+            imageUri?.let {
+                encoded = imageUri
+            }
             laporanData?.let {
-                EditLaporanScreen(
-                    navController = navController,
-                    vm = vm,
-                    laporan = laporanData
-                )
-            } ?: run {
+//                imageUri?.let {
+                    Log.d("DetData", "data masuk to $laporanData")
+                Log.d("DetData", "data encoded to $encoded")
+                    EditLaporanScreen(navController = navController, vm = vm, laporan = laporanData, encodedUri = encoded)
+//                }
+
+            }
+//            laporanData?.let {
+//                EditLaporanScreen(
+//                    navController = navController,
+//                    vm = vm,
+//                    laporan = laporanData,
+//                    encodedUri = it
+//                )
+//            }
+            ?: run {
                 Text(text = "Laporan tidak ditemukan")
             }
             // Print for debugging

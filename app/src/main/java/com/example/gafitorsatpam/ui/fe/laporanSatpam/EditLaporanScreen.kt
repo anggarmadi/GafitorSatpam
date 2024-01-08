@@ -1,5 +1,8 @@
 package com.example.gafitorsatpam.ui.fe.laporanSatpam
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -8,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -25,7 +29,7 @@ import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditLaporanScreen(navController: NavController, vm: GafitoViewModel, laporan: LaporanData) {
+fun EditLaporanScreen(navController: NavController, vm: GafitoViewModel, laporan: LaporanData, encodedUri: String) {
 
     val laporanAja = laporan
     var nomorPolisi by rememberSaveable { mutableStateOf(laporanAja?.nomorPolisi ?: "") }
@@ -33,6 +37,13 @@ fun EditLaporanScreen(navController: NavController, vm: GafitoViewModel, laporan
     var warna by rememberSaveable { mutableStateOf(laporanAja?.warna ?: "") }
     var description by rememberSaveable { mutableStateOf(laporanAja?.description ?: "") }
     var laporanImage by rememberSaveable { mutableStateOf(laporanAja?.laporanImage ?: "") }
+
+
+    var imageUri by remember { mutableStateOf(encodedUri) }
+    val newLaporanImageLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            imageUri = uri.toString()
+        }
 
     Scaffold(
         topBar = { TopBarAtas("Edit Laporan", navController) }
@@ -48,18 +59,18 @@ fun EditLaporanScreen(navController: NavController, vm: GafitoViewModel, laporan
 
         ) {
             FormEditLaporan(
+                navController = navController,
                 vm = vm,
                 laporan = laporan,
                 nomorPolisi = nomorPolisi,
                 merek = merek,
                 warna = warna,
                 description = description,
+                encodedUri = laporanImage,
                 onNomorPolisiChange = { nomorPolisi = it },
                 onMerekChange = { merek = it },
                 onWarnaChange = { warna = it },
-                onDescriptionChange = { description = it },
-                onSave = {  },
-                encodedUri = laporanImage
+                onDescriptionChange = { description = it }
             )
 
         }

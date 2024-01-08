@@ -138,7 +138,9 @@ fun  DetailLaporan(navController: NavController, vm: GafitoViewModel, laporan: L
                     Text(text = "Ubah")
                 }
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { vm.onDeleteLaporan(laporan.laporanId ?: ""){
+                        navigateTo(navController, DestinationScreen.ListLaporan)
+                    } },
                     colors = ButtonDefaults.buttonColors(Color.Red),
                     modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp),

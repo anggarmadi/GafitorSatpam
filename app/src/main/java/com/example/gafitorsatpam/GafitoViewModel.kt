@@ -1,6 +1,7 @@
 package com.example.gafitorsatpam
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.semantics.Role
@@ -281,6 +282,90 @@ class GafitoViewModel @Inject constructor(
             inProgress.value = false
         }
     }
+
+    fun onUpdateLaporan(
+        laporanId: String,
+        uri: Uri,
+        nomorPolisi: String,
+        merek: String,
+        warna: String,
+        description: String,
+        onLaporanSuccess: () -> Unit
+    ) {
+        uploadImage(uri) {
+            onEditLaporan(laporanId, it, nomorPolisi, merek, warna, description, onLaporanSuccess)
+        }
+    }
+
+    fun onEditLaporan(
+        laporanId: String,
+        imageUri: Uri,
+        nomorPolisi: String,
+        merek: String,
+        warna: String,
+        description: String,
+        onLaporanSuccess: () -> Unit
+    ) {
+        inProgress.value = true
+        val currenUid = auth.currentUser?.uid
+        val currentName = userData.value?.name
+
+        if (currenUid != null) {
+            val laporan = LaporanData(
+                laporanId = laporanId,
+                userId = currenUid,
+                name = currentName,
+                laporanImage = imageUri.toString(),
+                nomorPolisi = nomorPolisi,
+                merek = merek,
+                warna = warna,
+                description = description,
+                time = System.currentTimeMillis()
+            )
+
+            db.collection(LAPORAN).document(laporanId).set(laporan)
+                .addOnSuccessListener {
+                    popupNotification.value = Event("Berhasil update laporan")
+                    inProgress.value = false
+                    refreshLaporan()
+                    onLaporanSuccess.invoke()
+                }
+                .addOnFailureListener { exc ->
+                    handleException(exc, "Gagal update laporan")
+                    inProgress.value = false
+                }
+        } else {
+            handleException(customMessage = "Gagal update laporan")
+            onLogout()
+            inProgress.value = false
+        }
+    }
+
+    fun onDeleteLaporan(laporanId: String, onLaporanSuccess: () -> Unit) {
+            // Tidak ada gambar, langsung hapus laporan
+            deleteLaporanFromDatabase(laporanId, onLaporanSuccess)
+        refreshLaporan()
+    }
+
+    private fun deleteLaporanFromDatabase(laporanId: String, onLaporanSuccess: () -> Unit) {
+        inProgress.value = true
+        // 2. Hapus laporan dari database
+        db.collection(LAPORAN).document(laporanId)
+            .delete()
+            .addOnSuccessListener {
+                inProgress.value = false
+                // Tampilkan pesan sukses penghapusan
+                popupNotification.value = Event("Data Berhasil dihapus")
+                onLaporanSuccess.invoke()
+            }
+            .addOnFailureListener {
+                inProgress.value = false
+                // Handle error while deleting report
+                Log.e("GafitoViewModel", "Error deleting report: $it")
+                handleException(customMessage = "Terjadi kesalahan")
+            }
+    }
+
 
     fun refreshLaporan() {
         val currentUid = auth.currentUser?.uid

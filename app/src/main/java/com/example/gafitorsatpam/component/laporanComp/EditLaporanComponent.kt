@@ -2,6 +2,8 @@
 
 package com.example.gafitorsatpam.component.laporanComp
 
+import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -29,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -38,33 +41,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.gafitorsatpam.DestinationScreen
 import com.example.gafitorsatpam.GafitoViewModel
 import com.example.gafitorsatpam.R
 import com.example.gafitorsatpam.data.LaporanData
+import com.example.gafitorsatpam.main.navigateTo
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormEditLaporan(
+    navController: NavController,
     vm: GafitoViewModel,
     laporan: LaporanData,
     nomorPolisi: String,
     merek: String,
     warna: String,
     description: String,
+//    uri: Uri,
     onNomorPolisiChange: (String) -> Unit,
     onMerekChange: (String) -> Unit,
     onWarnaChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
-    onSave: () -> Unit,
     encodedUri: String
 ) {
     var licensePlateNumber by remember { mutableStateOf(nomorPolisi.split(" ")[1]) }
     var firstLetter by remember { mutableStateOf(nomorPolisi.split(" ")[0]) }
     var secondLetter by remember { mutableStateOf(nomorPolisi.split(" ")[2]) }
 
-    var imageUri by remember { mutableStateOf(encodedUri) }
+    var imageUri by rememberSaveable { mutableStateOf(encodedUri) }
+    Log.d("encd","Disini ada ga urinya $encodedUri")
 
     val newLaporanImageLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
@@ -205,7 +213,17 @@ fun FormEditLaporan(
             }
         }
         Button(
-            onClick = { onSave.invoke() },
+            onClick = { vm.onUpdateLaporan(
+                laporan.laporanId ?: "",
+                Uri.parse(imageUri),
+                nomorPolisi,
+                merek,
+                warna,
+                description
+            ) {
+                navigateTo(navController, DestinationScreen.ListLaporan)
+            }
+                Log.d("encd","Disini ada ga urinya $encodedUri") },
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
