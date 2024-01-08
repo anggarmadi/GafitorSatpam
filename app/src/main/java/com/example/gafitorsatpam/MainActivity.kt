@@ -52,6 +52,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
         // Memeriksa dan meminta izin kamera
         checkAndRequestPermission(Manifest.permission.CAMERA, CAMERA_PERMISSION_REQUEST_CODE)
 
