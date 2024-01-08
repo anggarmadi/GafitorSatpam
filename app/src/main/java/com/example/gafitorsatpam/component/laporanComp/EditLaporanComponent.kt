@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -27,17 +29,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gafitorsatpam.GafitoViewModel
+import com.example.gafitorsatpam.data.LaporanData
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormEditLaporan() {
+fun FormEditLaporan(
+    vm: GafitoViewModel,
+    laporan: LaporanData,
+    nomorPolisi: String,
+    merek: String,
+    warna: String,
+    description: String,
+    onNomorPolisiChange: (String) -> Unit,
+    onMerekChange: (String) -> Unit,
+    onWarnaChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onSave: () -> Unit
+) {
     var licensePlateNumber by remember { mutableStateOf("") }
     var firstLetter by remember { mutableStateOf("") }
     var secondLetter by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier,
+        modifier = Modifier.verticalScroll(rememberScrollState()),
         horizontalAlignment = CenterHorizontally
     ) {
         Column {
@@ -116,34 +132,25 @@ fun FormEditLaporan() {
 
                 ) {
                     TextField(
-                        value = "Honda Vario 1000 CC",
+                        value = merek,
                         label = { Text(text = "Merek Kendaraan") },
-                        onValueChange = {},
+                        onValueChange = onMerekChange,
                         modifier = Modifier
                             .padding(bottom = 16.dp)
                             .fillMaxWidth()
                     )
                     TextField(
-                        value = "Maroon Metalic",
+                        value = warna,
                         label = { Text(text = "Warna Kendaraan") },
-                        onValueChange = {},
+                        onValueChange = onWarnaChange,
                         modifier = Modifier
                             .padding(bottom = 16.dp)
                             .fillMaxWidth()
                     )
                     TextField(
-                        value = "19/10/2023, 04:43 PM",
-                        label = { Text(text = "Tanggal Laporan") },
-                        onValueChange = {},
-                        modifier = Modifier
-                            .padding(bottom = 16.dp)
-                            .fillMaxWidth()
-
-                    )
-                    TextField(
-                        value = "Kunci Motor Tertinggal",
+                        value = description,
                         label = { Text(text = "Deskripsi Laporan") },
-                        onValueChange = {},
+                        onValueChange = onDescriptionChange,
                         modifier = Modifier
                             .padding(bottom = 16.dp)
                             .fillMaxWidth()
@@ -153,7 +160,7 @@ fun FormEditLaporan() {
             }
         }
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onSave.invoke() },
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
@@ -162,13 +169,12 @@ fun FormEditLaporan() {
             Text(text = "Simpan")
         }
     }
-    
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun FormEditLaporanPreview() {
     GafitorSatpamTheme {
-        FormEditLaporan()
     }
 }

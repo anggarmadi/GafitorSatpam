@@ -116,6 +116,8 @@ dependencies {
     implementation ("androidx.activity:activity-ktx:1.8.2")
 
 
+    //swipe refresh
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")
 
 
 }
