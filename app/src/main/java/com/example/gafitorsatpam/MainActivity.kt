@@ -2,6 +2,8 @@
 
 package com.example.gafitorsatpam
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
@@ -30,6 +32,10 @@ import com.example.gafitorsatpam.ui.fe.laporanSatpam.ListLaporanScreen
 import com.example.gafitorsatpam.ui.fe.parkir.LaporParkirScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 import dagger.hilt.android.AndroidEntryPoint
+import android.Manifest
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -46,8 +52,29 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        // Memeriksa dan meminta izin kamera
+        checkAndRequestPermission(Manifest.permission.CAMERA, CAMERA_PERMISSION_REQUEST_CODE)
+
+        // Memeriksa dan meminta izin penyimpanan (storage)
+        checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_REQUEST_CODE)
+    }
+
+
+    // Fungsi untuk memeriksa dan meminta izin
+    private fun checkAndRequestPermission(permission: String, requestCode: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
+            }
+        }
     }
 }
+
+// Konstanta untuk kode permintaan izin kamera dan penyimpanan
+private const val CAMERA_PERMISSION_REQUEST_CODE = 100
+private const val STORAGE_PERMISSION_REQUEST_CODE = 101
+
+
 
 
 sealed class DestinationScreen(val route: String) {
