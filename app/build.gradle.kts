@@ -106,6 +106,8 @@ dependencies {
 
     implementation ("androidx.compose.runtime:runtime-livedata:1.2.0")
 
+    //swipe refresh
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")
 
 
 }

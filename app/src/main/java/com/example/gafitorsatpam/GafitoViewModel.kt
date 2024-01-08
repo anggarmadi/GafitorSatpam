@@ -39,6 +39,7 @@ class GafitoViewModel @Inject constructor(
 
     val refreshLaporanProgress = mutableStateOf(false)
     val laporans = mutableStateOf<List<LaporanData>>(listOf())
+    val laporanAja = mutableStateOf<LaporanData?>(null)
 
     val parkirProgress = mutableStateOf(false)
     val parkirs = mutableStateOf<List<ParkirData>>(listOf())

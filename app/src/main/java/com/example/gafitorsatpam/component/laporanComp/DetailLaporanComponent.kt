@@ -28,10 +28,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.gafitorsatpam.DestinationScreen
 import com.example.gafitorsatpam.GafitoViewModel
 import com.example.gafitorsatpam.R
 import com.example.gafitorsatpam.data.LaporanData
 import com.example.gafitorsatpam.main.CommonImage
+import com.example.gafitorsatpam.main.NavParam
+import com.example.gafitorsatpam.main.navigateTo
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 import com.example.gafitorsatpam.ui.theme.Warning
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
@@ -119,7 +122,7 @@ fun DetailLaporan(navController: NavController, vm: GafitoViewModel, laporan: La
                     .padding(8.dp)
             ) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { navigateTo(navController, DestinationScreen.EditLaporan, NavParam("laporan", laporan) ) },
                     colors = ButtonDefaults.buttonColors(Warning),
                     modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp),

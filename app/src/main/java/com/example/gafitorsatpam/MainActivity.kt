@@ -25,6 +25,7 @@ import com.example.gafitorsatpam.ui.fe.laporanSatpam.LaporKehilanganScreen
 import com.example.gafitorsatpam.ui.fe.dataParkir.ParkirDataScreen
 import com.example.gafitorsatpam.ui.fe.dataParkir.UserParkirScreen
 import com.example.gafitorsatpam.ui.fe.laporanSatpam.DetailLaporanScreen
+import com.example.gafitorsatpam.ui.fe.laporanSatpam.EditLaporanScreen
 import com.example.gafitorsatpam.ui.fe.laporanSatpam.ListLaporanScreen
 import com.example.gafitorsatpam.ui.fe.parkir.LaporParkirScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
@@ -60,6 +61,7 @@ sealed class DestinationScreen(val route: String) {
     }
     object ListLaporan : DestinationScreen("list_laporan")
     object ListParkir : DestinationScreen("list_parkir")
+    object EditLaporan : DestinationScreen("edit_laporan")
 }
 
 
@@ -122,6 +124,31 @@ fun GafitoApp() {
 //            val laporanId = backStackEntry.arguments?.getString("laporanId")
 //            // Tampilkan DetailLaporanView dengan laporanId
 //        }
+        composable(DestinationScreen.EditLaporan.route) {
+            val laporanData = navController.previousBackStackEntry?.savedStateHandle?.get<LaporanData>("laporan")
+            Log.d("laporan", "Argumen navigasi: ${navController.currentBackStackEntry?.arguments}")
+            // Periksa apakah laporan adalah null
+            if (laporanData == null) {
+                // Tampilkan pesan kesalahan
+                Log.e("laporan", "laporan tidak ditemukan nih, kosong")
+            }
+            val test = navController.currentBackStackEntry
+            Log.d("laporanData", "laporanData to $laporanData")
+            Log.d("Tst", "ada ga $test")
+
+            laporanData?.let {
+                EditLaporanScreen(
+                    navController = navController,
+                    vm = vm,
+                    laporan = laporanData
+                )
+            } ?: run {
+                Text(text = "Laporan tidak ditemukan")
+            }
+            // Print for debugging
+            println("laporanData: $laporanData")
+            println("laporanData: $test")
+        }
     }
 }
 
