@@ -28,7 +28,6 @@ import com.example.gafitorsatpam.ui.fe.laporanSatpam.DetailLaporanScreen
 import com.example.gafitorsatpam.ui.fe.laporanSatpam.ListLaporanScreen
 import com.example.gafitorsatpam.ui.fe.parkir.LaporParkirScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
-import com.example.simpleqrscanner.ViewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

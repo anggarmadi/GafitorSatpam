@@ -35,7 +35,9 @@ fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
     val view = LocalView.current
     barcodeScanner = BarrcodeScanner(context)
 
-    val barcodeResult = barcodeScanner.barcodeResult.collectAsState()
+    //simpan hasil scan
+    var barcodeResult = barcodeScanner.barcodeResult.collectAsState()
+
 
     val scope = rememberCoroutineScope()
     Scaffold(

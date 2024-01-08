@@ -3,6 +3,7 @@
 package com.example.gafitorsatpam.component.parkirComp
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.scrollable
@@ -53,6 +54,11 @@ fun FormParkir(
     barcodeValue: String?
 ) {
     var hasil = barcodeValue
+    var hp = ""
+    var nopol = ""
+    var hk = ""
+
+
     var licensePlateNumber by remember { mutableStateOf("") }
     var firstLetter by remember { mutableStateOf("") }
     var secondLetter by remember { mutableStateOf("") }
@@ -60,6 +66,15 @@ fun FormParkir(
     val noPolisi = "$firstLetter $licensePlateNumber $secondLetter"
 
     val focusManager = LocalFocusManager.current
+
+    Log.d("QR", "Bisa kok, $hasil")
+//    if (hasil != null ){
+//        if (hasil != "Gagal" || hasil != "Dibatalakan" || hasil != "No plat tidak valid"){
+//            firstLetter = hasil.split(" ")[0] // "BA"
+//            licensePlateNumber = hasil.split(" ")[1] // "123"
+//            secondLetter = hasil.split(" ")[2] // "CA"
+//        }
+//    }
 
     Column(
         modifier = Modifier
@@ -155,7 +170,7 @@ fun FormParkir(
                 .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
         ) {
-            Text(text = hasil ?:"Belum Lagi")
+            Text(text = hasil?: "Kirim")
         }
 //        Button(
 //            onClick = {  },

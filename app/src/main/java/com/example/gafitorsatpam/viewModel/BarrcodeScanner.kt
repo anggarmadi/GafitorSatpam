@@ -25,6 +25,15 @@ class BarrcodeScanner(
             try {
                 scanner.startScan()
                     .addOnSuccessListener { barcode ->
+                        //validasi hasil scan
+//                        val noPlatRegex = Regex("^[A-Z]{1,2}\\s[0-9]{1,4}\\s[A-Z]{1,3}")
+//                        if (barcodeResult != null){
+//                            if (!barcodeResult.toString().matches(noPlatRegex)){
+//                                barcodeResult.value = "No plat tidak valid"
+//                            }
+//                        } else{
+//                            barcodeResult.value = barcode.displayValue
+//                        }
                         barcodeResult.value = barcode.displayValue
                     }
                     .addOnCanceledListener {
