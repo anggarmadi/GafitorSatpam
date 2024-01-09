@@ -2,16 +2,27 @@
 
 package com.example.gafitorsatpam.component.laporanComp
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,27 +31,85 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import com.example.gafitorsatpam.DestinationScreen
+import com.example.gafitorsatpam.GafitoViewModel
+import com.example.gafitorsatpam.R
+import com.example.gafitorsatpam.data.LaporanData
+import com.example.gafitorsatpam.main.navigateTo
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormEditLaporan() {
-    var licensePlateNumber by remember { mutableStateOf("") }
-    var firstLetter by remember { mutableStateOf("") }
-    var secondLetter by remember { mutableStateOf("") }
+fun FormEditLaporan(
+    navController: NavController,
+    vm: GafitoViewModel,
+    laporan: LaporanData,
+    nomorPolisi: String,
+    merek: String,
+    warna: String,
+    description: String,
+//    uri: Uri,
+    onNomorPolisiChange: (String) -> Unit,
+    onMerekChange: (String) -> Unit,
+    onWarnaChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    encodedUri: String
+) {
+    var licensePlateNumber by remember { mutableStateOf(nomorPolisi.split(" ")[1]) }
+    var firstLetter by remember { mutableStateOf(nomorPolisi.split(" ")[0]) }
+    var secondLetter by remember { mutableStateOf(nomorPolisi.split(" ")[2]) }
 
+    var imageUri by rememberSaveable { mutableStateOf(encodedUri) }
+    Log.d("encd","Disini ada ga urinya $encodedUri")
+
+    val newLaporanImageLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            imageUri = uri.toString()
+        }
+
+    var onNomorPolisiChange = "$firstLetter $licensePlateNumber $secondLetter"
+    onNomorPolisiChange(onNomorPolisiChange)
     Column(
-        modifier = Modifier,
+        modifier = Modifier.verticalScroll(rememberScrollState()),
         horizontalAlignment = CenterHorizontally
     ) {
-        Column {
+        Column(
+            horizontalAlignment = CenterHorizontally
+        ) {
+            Card {
+                if (imageUri == "{imageUri}") {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_image_placeholder),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clickable { newLaporanImageLauncher.launch("image/*") },
+                        contentScale = ContentScale.Crop,
+                    )
+                } else {
+                    Image(
+                        painter = rememberAsyncImagePainter(imageUri),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(120.dp)
+                            .fillMaxSize()
+                            .clickable { newLaporanImageLauncher.launch("image/*") },
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
             Text(
                 text = "Nomor Polisi",
                 fontSize = 20.sp,
@@ -116,34 +185,25 @@ fun FormEditLaporan() {
 
                 ) {
                     TextField(
-                        value = "Honda Vario 1000 CC",
+                        value = merek,
                         label = { Text(text = "Merek Kendaraan") },
-                        onValueChange = {},
+                        onValueChange = onMerekChange,
                         modifier = Modifier
                             .padding(bottom = 16.dp)
                             .fillMaxWidth()
                     )
                     TextField(
-                        value = "Maroon Metalic",
+                        value = warna,
                         label = { Text(text = "Warna Kendaraan") },
-                        onValueChange = {},
+                        onValueChange = onWarnaChange,
                         modifier = Modifier
                             .padding(bottom = 16.dp)
                             .fillMaxWidth()
                     )
                     TextField(
-                        value = "19/10/2023, 04:43 PM",
-                        label = { Text(text = "Tanggal Laporan") },
-                        onValueChange = {},
-                        modifier = Modifier
-                            .padding(bottom = 16.dp)
-                            .fillMaxWidth()
-
-                    )
-                    TextField(
-                        value = "Kunci Motor Tertinggal",
+                        value = description,
                         label = { Text(text = "Deskripsi Laporan") },
-                        onValueChange = {},
+                        onValueChange = onDescriptionChange,
                         modifier = Modifier
                             .padding(bottom = 16.dp)
                             .fillMaxWidth()
@@ -153,7 +213,17 @@ fun FormEditLaporan() {
             }
         }
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { vm.onUpdateLaporan(
+                laporan.laporanId ?: "",
+                Uri.parse(imageUri),
+                nomorPolisi,
+                merek,
+                warna,
+                description
+            ) {
+                navigateTo(navController, DestinationScreen.ListLaporan)
+            }
+                Log.d("encd","Disini ada ga urinya $encodedUri") },
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
@@ -162,13 +232,12 @@ fun FormEditLaporan() {
             Text(text = "Simpan")
         }
     }
-    
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun FormEditLaporanPreview() {
     GafitorSatpamTheme {
-        FormEditLaporan()
     }
 }

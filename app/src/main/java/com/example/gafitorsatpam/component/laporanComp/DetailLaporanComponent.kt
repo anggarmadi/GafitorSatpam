@@ -27,14 +27,29 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.gafitorsatpam.DestinationScreen
+import com.example.gafitorsatpam.GafitoViewModel
 import com.example.gafitorsatpam.R
+import com.example.gafitorsatpam.data.LaporanData
+import com.example.gafitorsatpam.main.CommonImage
+import com.example.gafitorsatpam.main.NavParam
+import com.example.gafitorsatpam.main.navigateTo
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 import com.example.gafitorsatpam.ui.theme.Warning
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailLaporan() {
+fun  DetailLaporan(navController: NavController, vm: GafitoViewModel, laporan: LaporanData) {
+
+    val userData = vm.userData.value
+    val waktu = laporan.time ?: ""
+    val formated = SimpleDateFormat("dd/MM/yyyy HH:mm")
+    val waktunya = formated.format(waktu)
+
+
     Box(
         //            color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
@@ -51,9 +66,8 @@ fun DetailLaporan() {
                 .padding(16.dp)
 
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.images),
-                contentDescription = null,
+            CommonImage(
+                data = laporan.laporanImage,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .padding(16.dp)
@@ -61,7 +75,7 @@ fun DetailLaporan() {
                     .clip(CircleShape)
             )
             TextField(
-                value = "F 1 KRI",
+                value = laporan.nomorPolisi ?: "",
                 label = { Text(text = "Nomor Polisi") },
                 enabled = false,
                 onValueChange = {},
@@ -70,7 +84,7 @@ fun DetailLaporan() {
                     .fillMaxWidth()
             )
             TextField(
-                value = "Honda Vario 1000 CC",
+                value = laporan.merek ?: "",
                 label = { Text(text = "Merek Kendaraan") },
                 enabled = false,
                 onValueChange = {},
@@ -79,7 +93,7 @@ fun DetailLaporan() {
                     .fillMaxWidth()
             )
             TextField(
-                value = "Maroon Metalic",
+                value = laporan.warna ?: "",
                 label = { Text(text = "Warna Kendaraan") },
                 enabled = false,
                 onValueChange = {},
@@ -88,7 +102,7 @@ fun DetailLaporan() {
                     .fillMaxWidth()
             )
             TextField(
-                value = "19/10/2023, 04:43 PM",
+                value = waktunya,
                 label = { Text(text = "Tanggal Laporan") },
                 enabled = false,
                 onValueChange = {},
@@ -98,7 +112,7 @@ fun DetailLaporan() {
 
             )
             TextField(
-                value = "Laporan Kunci Tertinggal",
+                value = laporan.description ?: "",
                 label = { Text(text = "Deskripsi Laporan") },
                 enabled = false,
                 onValueChange = {},
@@ -112,7 +126,10 @@ fun DetailLaporan() {
                     .padding(8.dp)
             ) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        navController.currentBackStackEntry?.savedStateHandle?.set("laporan", laporan)
+                        navigateTo(navController, DestinationScreen.EditLaporan, NavParam("laporan", laporan) )
+                              },
                     colors = ButtonDefaults.buttonColors(Warning),
                     modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp),
@@ -121,7 +138,9 @@ fun DetailLaporan() {
                     Text(text = "Ubah")
                 }
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { vm.onDeleteLaporan(laporan.laporanId ?: ""){
+                        navigateTo(navController, DestinationScreen.ListLaporan)
+                    } },
                     colors = ButtonDefaults.buttonColors(Color.Red),
                     modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp),
@@ -138,6 +157,5 @@ fun DetailLaporan() {
 @Composable
 fun DetailLaporaPreview() {
     GafitorSatpamTheme {
-        DetailLaporan()
     }
 }

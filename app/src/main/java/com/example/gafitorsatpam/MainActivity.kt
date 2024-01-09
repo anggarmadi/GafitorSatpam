@@ -1,28 +1,37 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.gafitorsatpam
 
 import android.os.Bundle
+import android.os.Parcel
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.gafitorsatpam.component.BottomBar
-import com.example.gafitorsatpam.component.TopBarMenu
-import com.example.gafitorsatpam.component.parkirComp.CardUserParkir
-import com.example.gafitorsatpam.ui.fe.LaporanSatpam.LaporanScreen
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.gafitorsatpam.main.NotificationMessage
+import com.example.gafitorsatpam.auth.LoginScreen
+import com.example.gafitorsatpam.data.LaporanData
+import com.example.gafitorsatpam.ui.fe.laporanSatpam.LaporKehilanganScreen
+import com.example.gafitorsatpam.ui.fe.dataParkir.ParkirDataScreen
+import com.example.gafitorsatpam.ui.fe.dataParkir.UserParkirScreen
+import com.example.gafitorsatpam.ui.fe.laporanSatpam.DetailLaporanScreen
+import com.example.gafitorsatpam.ui.fe.laporanSatpam.EditLaporanScreen
+import com.example.gafitorsatpam.ui.fe.laporanSatpam.ListLaporanScreen
+import com.example.gafitorsatpam.ui.fe.parkir.LaporParkirScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,60 +42,135 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LaporanScreen()
+                    GafitoApp()
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GafitorSatpamTheme {
-        Greeting("Android")
+sealed class DestinationScreen(val route: String) {
+    object Login : DestinationScreen("login")
+    object DetailLaporan : DestinationScreen("detaillaporan")
+    object ParkirData : DestinationScreen("parkir_data")
+    object LaporParkir : DestinationScreen("lapor_parkir")
+    object LaporKehilangan : DestinationScreen("lapor_kehilangan/{imageUri}") {
+//        fun createRoute(uri: String) = "lapor_kehilangan/$uri"
     }
+    object ListLaporan : DestinationScreen("list_laporan")
+    object ListParkir : DestinationScreen("list_parkir")
+    object EditLaporan : DestinationScreen("edit_laporan/{imageUri}")
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun GafitoSApp(modifier: Modifier = Modifier) {
-    Scaffold(
-        topBar = { TopBarMenu(screen = "Home") },
-        bottomBar = { BottomBar(posisi = 0) }) { paddingValues ->
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
-                .verticalScroll(rememberScrollState())
-                .padding(paddingValues)
+fun GafitoApp() {
+    val vm = hiltViewModel<GafitoViewModel>()
+    val navController = rememberNavController()
 
-        ) {
-//        your code compose here
-            CardUserParkir()
-            CardUserParkir()
-            CardUserParkir()
-            CardUserParkir()
-            CardUserParkir()
-            CardUserParkir()
-            CardUserParkir()
+    NotificationMessage(vm = vm)
 
+    NavHost(navController = navController, startDestination = DestinationScreen.Login.route) {
+        composable(DestinationScreen.Login.route) {
+            LoginScreen(navController = navController, vm = vm)
+        }
+        composable(DestinationScreen.ParkirData.route) {
+            ParkirDataScreen(navController = navController, vm = vm)
+        }
+        composable(DestinationScreen.ListParkir.route) {
+            UserParkirScreen(navController = navController, vm = vm)
+        }
+        composable(DestinationScreen.LaporParkir.route) {
+            LaporParkirScreen(navController = navController, vm =vm)
+        }
+        composable(DestinationScreen.LaporKehilangan.route) { navBackStackEntry ->
+            val imageUri = navBackStackEntry.arguments?.getString("imageUri")
+            Log.d("Tst2", "ada ga di awal $imageUri")
+            imageUri?.let {
+                LaporKehilanganScreen(navController = navController, vm = vm, encodedUri = it)
+            }
+        }
+        composable(DestinationScreen.ListLaporan.route) {
+            ListLaporanScreen(navController = navController, vm = vm)
+        }
+        composable(DestinationScreen.DetailLaporan.route) {
+//            val laporanData = navController.currentBackStackEntry?.arguments?.getParcelable<LaporanData>("laporan")
+            val laporanData = navController.previousBackStackEntry?.savedStateHandle?.get<LaporanData>("laporan")
+            Log.d("laporan", "Argumen navigasi: ${navController.currentBackStackEntry?.arguments}")
+            // Periksa apakah laporan adalah null
+            if (laporanData == null) {
+                // Tampilkan pesan kesalahan
+                Log.e("laporan", "laporan tidak ditemukan nih, kosong")
+            }
+            val test = navController.currentBackStackEntry
+            Log.d("laporanData", "laporanData to $laporanData")
+            Log.d("Tst", "ada ga $test")
+
+            laporanData?.let {
+                DetailLaporanScreen(
+                    navController = navController,
+                    vm = vm,
+                    laporan = laporanData
+                )
+            } ?: run {
+                Text(text = "Laporan tidak ditemukan")
+            }
+            // Print for debugging
+            println("laporanData: $laporanData")
+            println("laporanData: $test")
+        }
+//        composable("detail_laporan/{laporanId}") { backStackEntry ->
+//            val laporanId = backStackEntry.arguments?.getString("laporanId")
+//            // Tampilkan DetailLaporanView dengan laporanId
+//        }
+        composable(DestinationScreen.EditLaporan.route) {navBackStackEntry ->
+            val laporanData = navController.previousBackStackEntry?.savedStateHandle?.get<LaporanData>("laporan")
+            Log.d("laporanDet", "Argumen navigasi: ${navController.currentBackStackEntry?.arguments}")
+            // Periksa apakah laporan adalah null
+            if (laporanData == null) {
+                // Tampilkan pesan kesalahan
+                Log.e("laporanD", "laporan tidak ditemukan nih, kosong")
+            }
+            val test = navController.currentBackStackEntry
+            Log.d("DetData", "laporanData to $laporanData")
+            Log.d("Tst2", "ada ga $test")
+
+            val imageUri = navBackStackEntry.arguments?.getString("imageUri")
+            Log.d("Tst2", "ada ga disini $imageUri")
+            var encoded = "{imageUri}"
+            imageUri?.let {
+                encoded = imageUri
+            }
+            laporanData?.let {
+//                imageUri?.let {
+                    Log.d("DetData", "data masuk to $laporanData")
+                Log.d("DetData", "data encoded to $encoded")
+                    EditLaporanScreen(navController = navController, vm = vm, laporan = laporanData, encodedUri = encoded)
+//                }
+
+            }
+//            laporanData?.let {
+//                EditLaporanScreen(
+//                    navController = navController,
+//                    vm = vm,
+//                    laporan = laporanData,
+//                    encodedUri = it
+//                )
+//            }
+            ?: run {
+                Text(text = "Laporan tidak ditemukan")
+            }
+            // Print for debugging
+            println("laporanData: $laporanData")
+            println("laporanData: $test")
         }
     }
-
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GafitoSAppPreview() {
     GafitorSatpamTheme {
-        GafitoSApp()
     }
 }
