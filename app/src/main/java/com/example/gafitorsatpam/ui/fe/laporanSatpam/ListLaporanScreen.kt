@@ -53,7 +53,7 @@ fun ListLaporanScreen(navController: NavController, vm: GafitoViewModel) {
         topBar = { TopBarMenu("List Laporan Satpam") },
         bottomBar = {
             BottomBar(
-                selectedItem = BottomBarItem.LAPORPARKIR,
+                selectedItem = BottomBarItem.REPORT,
                 navController = navController
             )
         },floatingActionButton = {
