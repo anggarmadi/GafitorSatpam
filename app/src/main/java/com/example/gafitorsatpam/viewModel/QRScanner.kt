@@ -37,15 +37,15 @@ class QRScanner(appContext: Context) {
         try {
             moduleInstallClient
                 .installModules(moduleInstallRequest)
-//                .addOnSuccessListener {
-//                    if (it.areModulesAlreadyInstalled()) {
+                .addOnSuccessListener {
+                    if (it.areModulesAlreadyInstalled()) {
 //                        Toast.makeText(context, "Modules are already installed", Toast.LENGTH_LONG).show()
-//                    }
+                    }
 //                    Toast.makeText(context, "Modules successfully installed", Toast.LENGTH_LONG).show()
-//                }
-//                .addOnFailureListener {
-//                    Log.e("MainActivity", "Error installing modules", it)
-//                }
+                }
+                .addOnFailureListener {
+                    Log.e("MainActivity", "Error installing modules", it)
+                }
             pindai.startScan()
                 .addOnSuccessListener { barcode ->
                     val noPlatRegex = Regex("^[A-Z]{1,2}\\s[0-9]{1,4}\\s[A-Z]{1,3}$")

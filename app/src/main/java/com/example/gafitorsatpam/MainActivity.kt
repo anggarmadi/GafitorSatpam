@@ -2,6 +2,8 @@
 
 package com.example.gafitorsatpam
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
@@ -14,6 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -54,8 +58,26 @@ class MainActivity : ComponentActivity() {
             }
         }
         FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+        // Memeriksa dan meminta izin kamera
+        checkAndRequestPermission(android.Manifest.permission.CAMERA, CAMERA_PERMISSION_REQUEST_CODE)
+
+        // Memeriksa dan meminta izin penyimpanan (storage)
+        checkAndRequestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_REQUEST_CODE)
+    }
+    // Fungsi untuk memeriksa dan meminta izin
+    private fun checkAndRequestPermission(permission: String, requestCode: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
+            }
+        }
     }
 }
+
+// Konstanta untuk kode permintaan izin kamera dan penyimpanan
+private const val CAMERA_PERMISSION_REQUEST_CODE = 100
+private const val STORAGE_PERMISSION_REQUEST_CODE = 101
+
 
 sealed class DestinationScreen(val route: String) {
     object Login : DestinationScreen("login")
@@ -121,7 +143,7 @@ fun GafitoApp() {
                     laporan = laporanData
                 )
             } ?: run {
-                Text(text = "Laporan tidak ditemukan")
+//                Text(text = "Laporan tidak ditemukan")
             }
             // Print for debugging
             println("laporanData: $laporanData")
@@ -166,7 +188,7 @@ fun GafitoApp() {
 //                )
 //            }
             ?: run {
-                Text(text = "Laporan tidak ditemukan")
+//                Text(text = "Laporan tidak ditemukan")
             }
             // Print for debugging
             println("laporanData: $laporanData")
