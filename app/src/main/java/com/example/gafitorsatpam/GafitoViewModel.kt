@@ -10,16 +10,25 @@ import com.example.gafitorsatpam.data.Event
 import com.example.gafitorsatpam.data.LaporanData
 import com.example.gafitorsatpam.data.ParkirData
 import com.example.gafitorsatpam.data.UserData
+import com.example.gafitorsatpam.notification.NotificationData
+import com.example.gafitorsatpam.notification.PushNotification
+import com.example.gafitorsatpam.notification.RetrofitInstance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.lang.invoke.TypeDescriptor
 import java.util.UUID
 import javax.inject.Inject
+
+const val TOPIC = "/topics/myTopic"
 
 const val USERS = "users"
 const val LAPORAN = "laporan"
@@ -270,6 +279,12 @@ class GafitoViewModel @Inject constructor(
                     inProgress.value = false
                     refreshLaporan()
                     onLaporanSuccess.invoke()
+                    PushNotification(
+                        NotificationData(title = "Laporan Baru", message = "$nomorPolisi $description"),
+                        TOPIC
+                    ).also { PushNotification ->
+                        sendNotification(PushNotification)
+                    }
                 }
                 .addOnFailureListener { exc ->
                     handleException(exc, "Gagal membuat laporan")
@@ -512,6 +527,21 @@ class GafitoViewModel @Inject constructor(
         }
         val sortedLaporans = newParkir.sortedByDescending { it.time }
         outState.value = sortedLaporans
+    }
+
+    val TAG = "MainActivity"
+
+    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = RetrofitInstance.api.postNotification(notification)
+//            if (response.isSuccessful) {
+//                Log.d(TAG, "Response: ${Gson().toJson(response)}")
+//            } else {
+//                Log.e(TAG, response.errorBody().toString())
+//            }
+        } catch (e: Exception) {
+//            Log.e(TAG, e.toString())
+        }
     }
 
 }

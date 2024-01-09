@@ -21,6 +21,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.gafitorsatpam.main.NotificationMessage
 import com.example.gafitorsatpam.auth.LoginScreen
 import com.example.gafitorsatpam.data.LaporanData
+import com.example.gafitorsatpam.notification.PushNotification
+import com.example.gafitorsatpam.notification.RetrofitInstance
 import com.example.gafitorsatpam.ui.fe.laporanSatpam.LaporKehilanganScreen
 import com.example.gafitorsatpam.ui.fe.dataParkir.ParkirDataScreen
 import com.example.gafitorsatpam.ui.fe.dataParkir.UserParkirScreen
@@ -29,7 +31,12 @@ import com.example.gafitorsatpam.ui.fe.laporanSatpam.EditLaporanScreen
 import com.example.gafitorsatpam.ui.fe.laporanSatpam.ListLaporanScreen
 import com.example.gafitorsatpam.ui.fe.parkir.LaporParkirScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -46,9 +53,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
     }
 }
-
 
 sealed class DestinationScreen(val route: String) {
     object Login : DestinationScreen("login")
