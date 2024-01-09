@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -38,6 +39,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,8 +59,8 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
     var licensePlateNumber by remember { mutableStateOf("") }
     var firstLetter by remember { mutableStateOf("") }
     var secondLetter by remember { mutableStateOf("") }
-    var merek by remember { mutableStateOf("")}
-    var warna by remember { mutableStateOf("")}
+    var merek by remember { mutableStateOf("") }
+    var warna by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
     val nomorPolisi = "$firstLetter $licensePlateNumber $secondLetter"
@@ -127,7 +130,12 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
                         },
                         label = { Text("HP") },
                         //                textStyle = TextStyle(fontSize = 18.sp),
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Characters,
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Text
+                        )
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -139,7 +147,11 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
                         },
                         label = { Text("Nomor Polisi") },
                         //                textStyle = TextStyle(fontSize = 18.sp),
-                        modifier = Modifier.weight(2f)
+                        modifier = Modifier.weight(2f),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Number
+                        )
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -151,7 +163,12 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
                         },
                         label = { Text("HK") },
                         //                textStyle = TextStyle(fontSize = 18.sp),
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Characters,
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Text
+                        )
                     )
                 }
             }
@@ -180,26 +197,38 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
                     TextField(
                         value = merek,
                         label = { Text(text = "Merek Kendaraan") },
-                        onValueChange = {merek = it},
+                        onValueChange = { merek = it },
                         modifier = Modifier
                             .padding(bottom = 16.dp)
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Text
+                        )
                     )
                     TextField(
                         value = warna,
                         label = { Text(text = "Warna Kendaraan") },
-                        onValueChange = {warna = it},
+                        onValueChange = { warna = it },
                         modifier = Modifier
                             .padding(bottom = 16.dp)
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Text
+                        )
                     )
                     TextField(
                         value = description,
                         label = { Text(text = "Deskripsi") },
-                        onValueChange = {description = it},
+                        onValueChange = { description = it },
                         modifier = Modifier
                             .padding(bottom = 16.dp)
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Text
+                        )
                     )
                 }
             }

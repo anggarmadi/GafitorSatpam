@@ -97,9 +97,9 @@ fun CardUserParkir(parkir: ParkirData, modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(8.dp)
             )
-            .clickable {
-                expanded.value = !expanded.value
-            }
+//            .clickable {
+//                expanded.value = !expanded.value
+//            }
     ) {
         Row(
             modifier =  Modifier.padding(4.dp),
