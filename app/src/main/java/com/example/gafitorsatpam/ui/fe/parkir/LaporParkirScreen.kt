@@ -46,7 +46,7 @@ fun LaporParkirScreen(navController: NavController, vm: GafitoViewModel) {
 
     val scope = rememberCoroutineScope()
     Scaffold(
-        topBar = { TopBarMenu(screen = "Input Parkir") },
+        topBar = { TopBarMenu(screen = "Input Parkir",vm)},
         bottomBar = { BottomBar(
             selectedItem = BottomBarItem.LAPORPARKIR,
             navController = navController

@@ -50,7 +50,7 @@ fun ListLaporanScreen(navController: NavController, vm: GafitoViewModel) {
 
 
     Scaffold(
-        topBar = { TopBarMenu("List Laporan Satpam") },
+        topBar = { TopBarMenu("List Laporan Satpam",vm) },
         bottomBar = {
             BottomBar(
                 selectedItem = BottomBarItem.REPORT,
