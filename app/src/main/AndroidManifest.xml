@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <application
         android:name=".GafitoSatpamApp"
@@ -23,6 +23,17 @@
         android:theme="@style/Theme.GafitorSatpam"
         android:windowSoftInputMode="adjustResize"
         tools:targetApi="31">
+
+        <service
+            android:name=".notifications.FirebaseService"
+            android:exported="false"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.internet.RECEIVE" />
+            </intent-filter>
+        </service>
+
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="barcode_ui"/>
