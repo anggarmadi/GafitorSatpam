@@ -120,9 +120,10 @@ fun GafitoApp() {
                     vm = vm,
                     laporan = laporanData
                 )
-            } ?: run {
-                Text(text = "Laporan tidak ditemukan")
             }
+//                ?: run {
+//                Text(text = "Laporan tidak ditemukan")
+//            }
             // Print for debugging
             println("laporanData: $laporanData")
             println("laporanData: $test")
@@ -165,9 +166,9 @@ fun GafitoApp() {
 //                    encodedUri = it
 //                )
 //            }
-            ?: run {
-                Text(text = "Laporan tidak ditemukan")
-            }
+//            ?: run {
+//                Text(text = "Laporan tidak ditemukan")
+//            }
             // Print for debugging
             println("laporanData: $laporanData")
             println("laporanData: $test")
