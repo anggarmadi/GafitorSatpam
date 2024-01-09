@@ -4,7 +4,6 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.ViewModel
 import com.example.gafitorsatpam.data.Event
 import com.example.gafitorsatpam.data.LaporanData
@@ -18,13 +17,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import java.lang.invoke.TypeDescriptor
 import java.util.UUID
 import javax.inject.Inject
 
@@ -49,7 +45,6 @@ class GafitoViewModel @Inject constructor(
 
     val refreshLaporanProgress = mutableStateOf(false)
     val laporans = mutableStateOf<List<LaporanData>>(listOf())
-    val laporanAja = mutableStateOf<LaporanData?>(null)
 
     val parkirProgress = mutableStateOf(false)
     val parkirs = mutableStateOf<List<ParkirData>>(listOf())
@@ -62,34 +57,6 @@ class GafitoViewModel @Inject constructor(
         currentUser?.uid?.let { uid ->
             getUserData(uid)
         }
-    }
-
-    fun onSignup(username: String, email: String, pass: String) {
-        if (username.isEmpty() or email.isEmpty() or pass.isEmpty()) {
-            handleException(customMessage = "Please fill in all fields")
-            return
-        }
-        inProgress.value = true
-
-        db.collection(USERS).whereEqualTo("username", username).get()
-            .addOnSuccessListener { documents ->
-                if (documents.size() > 0) {
-                    handleException(customMessage = "Username already exists")
-                    inProgress.value = false
-                } else {
-                    auth.createUserWithEmailAndPassword(email, pass)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                signedIn.value = true
-                                createOrUpdateProfile(username = username)
-                            } else {
-                                handleException(task.exception, "Sign Up Failed")
-                            }
-                            inProgress.value = false
-                        }
-                }
-            }
-            .addOnFailureListener { }
     }
 
     fun onLogin(email: String, pass: String) {
@@ -117,7 +84,7 @@ class GafitoViewModel @Inject constructor(
                                 } else {
                                     inProgress.value = false
                                     // Role tidak valid, logout pengguna
-                                    handleException(customMessage = "Login gagal: Role tidak valid")
+                                    handleException(customMessage = "Akun anda tidak ditemukan")
                                     auth.signOut()
                                 }
                             }
@@ -135,51 +102,6 @@ class GafitoViewModel @Inject constructor(
                 handleException(exc, "Login Failed")
                 inProgress.value = false
             }
-    }
-
-    private fun createOrUpdateProfile(
-        name: String? = null,
-        username: String? = null,
-        imageUrl: String? = null,
-        noPolisi: String? = null,
-        jenisMotor: String? = null,
-        noHP: String? = null,
-    ) {
-        val uid = auth.currentUser?.uid
-        val userData = UserData(
-            userId = uid,
-            name = name ?: userData.value?.name,
-            username = username ?: userData.value?.username,
-            imageUrl = imageUrl ?: userData.value?.imageUrl,
-            noPolisi = noPolisi ?: userData.value?.noPolisi,
-            jenisMotor = jenisMotor ?: userData.value?.jenisMotor,
-            noHP = noHP ?: userData.value?.noHP
-        )
-
-        uid?.let { uid ->
-            inProgress.value = true
-            db.collection(USERS).document(uid).get().addOnSuccessListener {
-                if (it.exists()) {
-                    it.reference.update(userData.toMap())
-                        .addOnSuccessListener {
-                            this.userData.value = userData
-                            inProgress.value = false
-                        }
-                        .addOnFailureListener {
-                            handleException(it, "Cannot update user")
-                            inProgress.value = false
-                        }
-                } else {
-                    db.collection(USERS).document(uid).set(userData)
-                    getUserData(uid)
-                    inProgress.value = false
-                }
-            }
-                .addOnFailureListener { exc ->
-                    handleException(exc, "Cannot create User")
-                    inProgress.value = false
-                }
-        }
     }
 
     private fun getUserData(uid: String) {
