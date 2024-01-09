@@ -33,8 +33,20 @@ import com.example.gafitorsatpam.ui.fe.parkir.LaporParkirScreen
 import com.example.gafitorsatpam.ui.theme.GafitorSatpamTheme
 import dagger.hilt.android.AndroidEntryPoint
 import android.Manifest
+import android.widget.Toast
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.gafitorsatpam.component.FirebaseMessagingNotificationPermissionDialog
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.messaging
 
 
 @AndroidEntryPoint
@@ -48,6 +60,18 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    FirebaseMessaging.getInstance().token
+                        .addOnCompleteListener(OnCompleteListener { task ->
+                            if (!task.isSuccessful) {
+                                Log.d("FCM Notify", "Fetching FCM registration token failed", task.exception)
+                                return@OnCompleteListener
+                            }
+
+                            //Get new FCM registration token
+                            val token: String? = task.result
+                            Log.d("FCM Token", token, task.exception)
+                            Toast.makeText(this, token, Toast.LENGTH_SHORT).show()
+                        })
                     GafitoApp()
                 }
             }
@@ -92,8 +116,27 @@ sealed class DestinationScreen(val route: String) {
 }
 
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun GafitoApp() {
+    val showNotificationDialog = remember { mutableStateOf(false) }
+
+    // Android 13 Api 33 - runtime notification permission has been added
+    val notificationPermissionState = rememberPermissionState(
+        permission = Manifest.permission.POST_NOTIFICATIONS
+    )
+    if (showNotificationDialog.value) FirebaseMessagingNotificationPermissionDialog(
+        showNotificationDialog = showNotificationDialog,
+        notificationPermissionState = notificationPermissionState
+    )
+
+    LaunchedEffect(key1=Unit){
+        if (notificationPermissionState.status.isGranted ||
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+        ) {
+            Firebase.messaging.subscribeToTopic("Laporan")
+        } else showNotificationDialog.value = true
+    }
     val vm = hiltViewModel<GafitoViewModel>()
     val navController = rememberNavController()
 

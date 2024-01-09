@@ -9,6 +9,7 @@ import com.example.gafitorsatpam.data.Event
 import com.example.gafitorsatpam.data.LaporanData
 import com.example.gafitorsatpam.data.ParkirData
 import com.example.gafitorsatpam.data.UserData
+import com.example.gafitorsatpam.service.MyFireBaseMessagingService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
@@ -455,6 +456,8 @@ class GafitoViewModel @Inject constructor(
         }
     }
 
+
+
     private fun convertParkir(documents: QuerySnapshot, outState: MutableState<List<ParkirData>>) {
         val newParkir = mutableListOf<ParkirData>()
         documents.forEach { doc ->
@@ -464,5 +467,7 @@ class GafitoViewModel @Inject constructor(
         val sortedLaporans = newParkir.sortedByDescending { it.time }
         outState.value = sortedLaporans
     }
+
+
 
 }

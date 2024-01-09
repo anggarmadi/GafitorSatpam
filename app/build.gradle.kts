@@ -7,6 +7,7 @@ plugins {
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
 }
 
@@ -98,6 +99,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-messaging-ktx:23.4.0")
 
     // coil
     implementation("io.coil-kt:coil-compose:2.5.0")
@@ -118,6 +122,12 @@ dependencies {
 
     //swipe refresh
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")
+
+    //notif
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
+
+
+
 
 
 }

@@ -2,7 +2,13 @@
 
 package com.example.gafitorsatpam.component.laporanComp
 
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,12 +43,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
@@ -75,6 +86,13 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
     }
 
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+    val channelId = "MakeitEasy"
+    val notificationId = 0
+    LaunchedEffect(Unit) {
+        createNotificationChannel(channelId, context)
+    }
+
 
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -98,7 +116,15 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
                         modifier = Modifier
                             .size(120.dp)
                             .fillMaxSize()
-                            .clickable { newLaporanImageLauncher.launch("image/*") },
+                            .clickable {
+                                simpleNotification(
+                                    context,
+                                    channelId,
+                                    notificationId,
+                                    "Simple Notification",
+                                    "This is a simple notification with default priority."
+                                )
+                                newLaporanImageLauncher.launch("image/*") },
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -225,6 +251,51 @@ fun FormLaporan(navController: NavController, vm: GafitoViewModel, encodedUri: S
         }
 
         Spacer(modifier = Modifier.padding(64.dp))
+    }
+}
+
+fun createNotificationChannel(channelId: String, context: Context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val name = "MakeitEasy"
+        val desc = "My Channel MakeitEasy"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelId, name, importance).apply {
+            description = desc
+        }
+        val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+}
+
+fun simpleNotification(
+    context: Context,
+    channelId: String,
+    notificationId: Int,
+    textTitle: String,
+    textContent: String,
+    priority: Int = NotificationCompat.PRIORITY_DEFAULT
+) {
+    val builder = NotificationCompat.Builder(context, channelId)
+        .setSmallIcon(R.drawable.gafito)
+        .setContentTitle(textTitle)
+        .setContentText(textContent)
+        .setPriority(priority)
+    with(NotificationManagerCompat.from(context)) {
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        notify(notificationId, builder.build())
     }
 }
 
