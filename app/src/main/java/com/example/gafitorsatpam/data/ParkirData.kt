@@ -9,5 +9,6 @@ data class ParkirData(
     var imageUrl: String? = null,
     var latitude: String? = null,
     var longitude: String? = null,
+    var locationName: String? = null,
     var time: Long? = null
 )

@@ -396,42 +396,6 @@ class GafitoViewModel @Inject constructor(
         outState.value = sortedLaporans
     }
 
-//    fun oncreateParkir(noPolisi: String) {
-//        inProgress.value = true
-//        // Membuat instance dari ParkirData
-//        val parkirData = ParkirData()
-//        // Mengisi parkirId dengan UUID random
-//        parkirData.parkirId = UUID.randomUUID().toString()
-//        // Mengisi nomorPolisi dengan parameter fungsi
-//        parkirData.noPolisi = noPolisi
-//        // Mengisi time dengan waktu saat ini dalam milisekon
-//        parkirData.time = System.currentTimeMillis()
-//        // Mencari data user berdasarkan nomorPolisi di collection users
-//        val userRef = db.collection(USERS).whereEqualTo("noPolisi", noPolisi)
-//        userRef.get().addOnSuccessListener { querySnapshot ->
-//            // Jika data user ditemukan, mengisi data userId, merek, name, dan imageUrl dari user
-//            if (querySnapshot.size() > 0) {
-//                val user = querySnapshot.documents[0].toObject(UserData::class.java)
-//                parkirData.userId = user?.userId
-//                parkirData.merek = user?.jenisMotor
-//                parkirData.name = user?.name
-//                parkirData.imageUrl = user?.imageUrl
-//            }
-//            db.collection(PARKIR).document(parkirData.parkirId!!).set(parkirData)
-//                .addOnSuccessListener {
-//                    popupNotification.value = Event("Data Parkir berhasil ditambahkan")
-//                        inProgress.value = false
-//                }
-//                .addOnFailureListener { exc ->
-//                        handleException(exc, "Gagal menambahkan data Parkir")
-//                        inProgress.value = false
-//                    }
-//        }
-//            .addOnFailureListener { exc ->
-//                handleException(exc, "Gagal menambahkan data Parkir")
-//                inProgress.value = false
-//            }
-//    }
 
     // Fungsi untuk membuat collection parkir berdasarkan data nomorPolisi
     fun onCreateParkir(noPolisi: String) {
